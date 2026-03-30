@@ -1,0 +1,371 @@
+<body>
+  <div id="loading-screen">
+    <div class="loading-logo logo">
+      <span>T</span><span>O</span><span>Y</span> <span>K</span><span>I</span><span>N</span><span>G</span><span>D</span><span>O</span><span>M</span>
+    </div>
+  </div>
+
+  <canvas id="particle-canvas"></canvas>
+  <div class="fly-item" id="fly-emoji" style="display:none;"></div>
+
+  <!-- Cart Overlay & Sidebar -->
+  <div class="cart-overlay" onclick="toggleCart()"></div>
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">
+      <h3>🛒 YOUR CART (<span id="cart-count">0</span> items)</h3>
+      <button class="cart-close" onclick="toggleCart()">❌</button>
+    </div>
+    <div class="cart-progress" id="cart-progress-container">
+      <div class="cart-progress-bar" id="cart-progress-bar" style="width: 0%"></div>
+    </div>
+    <div class="cart-progress-text" id="cart-progress-text">Add ₱1,500 more for free shipping!</div>
+    <div class="cart-items" id="cart-items">
+      <!-- Items inject here -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-subtotal"><span>Subtotal:</span> <span id="cart-subtotal">₱0</span></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-yellow" style="flex:1;" onclick="toggleCart()">CONTINUE</button>
+        <button class="btn btn-red" style="flex:1;">CHECKOUT</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="top-bar">
+      <div class="marquee">🎉 FREE SHIPPING on orders ₱1,500+ | 🎁 BIRTHDAY REGISTRY available | ⭐ NEW ARRIVALS every week | 🚚 Same-day delivery in Metro Manila</div>
+    </div>
+    <div class="header-main">
+      <a href="/" class="logo-container nav-link" data-route="home">
+        <div class="logo">👑 <span>T</span><span>O</span><span>Y</span> <span>K</span><span>I</span><span>N</span><span>G</span><span>D</span><span>O</span><span>M</span></div>
+        <span class="tagline">The Amazing Toy Store</span>
+      </a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search for toys..." id="search-input">
+        <button>🔍</button>
+      </div>
+      <div class="header-actions">
+        <div class="action-icon" title="Account">👤</div>
+        <div class="action-icon" title="Wishlist">❤️<span class="badge" id="wish-badge">0</span></div>
+        <div class="action-icon" onclick="toggleCart()" id="cart-icon" title="Cart">🛒<span class="badge" id="cart-badge">0</span></div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      </div>
+    </div>
+    <nav class="nav-bar" id="nav-bar">
+      <div class="nav-links"><a href="/" class="nav-link active" data-route="home">HOME</a></div>
+      <div class="nav-links"><a href="/shop" class="nav-link" data-route="shop">SHOP</a></div>
+      <div class="nav-links"><a href="/new-arrivals" class="nav-link" data-route="new-arrivals">NEW ARRIVALS</a></div>
+      <div class="nav-links"><a href="/sale" class="nav-link" data-route="sale">SALE</a></div>
+      <div class="nav-links"><a href="/categories" class="nav-link" data-route="categories">CATEGORIES</a></div>
+      <div class="nav-links"><a href="/about" class="nav-link" data-route="about">ABOUT</a></div>
+      <div class="nav-links"><a href="/contact" class="nav-link" data-route="contact">CONTACT</a></div>
+    </nav>
+  </header>
+
+  <main id="app-container">
+    
+    <!-- PAGE: HOME -->
+    <div id="page-home" class="page active">
+      <section class="hero">
+        <div class="hero-text">
+          <span class="hero-label wiggle-float">WELCOME TO THE KINGDOM 👑</span>
+          <h1 class="hero-title wiggle-float" style="animation-delay: 0.2s;">
+            <span class="line1">THE MOST</span>
+            <span class="line2">AMAZING TOYS</span>
+            <span class="line3">IN THE WORLD!</span>
+          </h1>
+          <p class="hero-sub wiggle-float" style="animation-delay: 0.4s;">Discover thousands of toys for every age. Free shipping. Easy returns. Always amazing.</p>
+          <div class="hero-actions wiggle-float" style="animation-delay: 0.6s;">
+            <a href="/shop" class="btn btn-red nav-link" data-route="shop">SHOP NOW 🛒</a>
+            <a href="/sale" class="btn btn-yellow nav-link" data-route="sale">VIEW SALE 🔥</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="blob red"></div><div class="blob yellow"></div><div class="blob blue"></div>
+          <div class="hero-toy ht-1">🤖</div>
+          <div class="hero-toy ht-2">🚀</div>
+          <div class="hero-toy ht-3">🎮</div>
+          <div class="hero-toy ht-4">🦕</div>
+          <div class="hero-toy ht-5">🎯</div>
+        </div>
+      </section>
+
+      <div class="categories-row" id="quick-cats">
+        <!-- Rendered by JS -->
+      </div>
+
+      <h2 class="section-title wiggle-float">⭐ FEATURED TOYS ⭐</h2>
+      <div class="grid grid-4" id="home-featured">
+        <!-- Products rendered by JS -->
+      </div>
+
+      <div class="promo-banner wiggle-float">
+        <div class="promo-half promo-red">
+          <div class="promo-float" style="left:10%">🎁</div>
+          <h2>🎂 BIRTHDAY REGISTRY</h2>
+          <p>Make every birthday magical</p>
+          <a href="/contact" class="btn nav-link" data-route="contact">CREATE REGISTRY</a>
+        </div>
+        <div class="promo-half promo-yellow">
+          <div class="promo-float" style="right:10%">📦</div>
+          <h2>📦 BULK ORDERS</h2>
+          <p>Special discounts for schools & events</p>
+          <a href="/contact" class="btn btn-yellow-solid nav-link" data-route="contact">GET A QUOTE</a>
+        </div>
+      </div>
+
+      <div class="age-cards" style="grid-template-columns: repeat(5, 1fr);" id="age-browser">
+        <div class="age-card floating" style="background:#FFF9C4; animation-delay: 0.1s;" onclick="routeTo('/shop')">👶 0-2 yrs</div>
+        <div class="age-card floating" style="background:#BBDEFB; animation-delay: 0.4s;" onclick="routeTo('/shop')">🧒 3-5 yrs</div>
+        <div class="age-card floating" style="background:#FFCDD2; animation-delay: 0.7s;" onclick="routeTo('/shop')">🧑 6-8 yrs</div>
+        <div class="age-card floating" style="background:#C8E6C9; animation-delay: 0.2s;" onclick="routeTo('/shop')">👦 9-12 yrs</div>
+        <div class="age-card floating" style="background:#E1BEE7; animation-delay: 0.5s;" onclick="routeTo('/shop')">🧑‍💻 13+ yrs</div>
+      </div>
+
+      <div class="trust-badges wiggle-float">
+        <div class="trust-badge"><span class="icon">🚚</span>Free Shipping ₱1,500+</div>
+        <div class="trust-badge"><span class="icon">🔄</span>30-Day Returns</div>
+        <div class="trust-badge"><span class="icon">🔒</span>Secure Checkout</div>
+        <div class="trust-badge"><span class="icon">🎁</span>Gift Wrapping</div>
+      </div>
+    </div>
+
+    <!-- PAGE: SHOP -->
+    <div id="page-shop" class="page">
+      <h2 class="section-title wiggle-float">ALL TOYS</h2>
+      <div class="shop-layout">
+        <aside class="sidebar floating" style="animation-delay: 0s;">
+          <div class="filter-group">
+            <h4>Category</h4>
+            <div id="filter-categories"></div>
+          </div>
+          <div class="filter-group">
+            <h4>Price Range</h4>
+            <input type="range" min="0" max="5000" value="5000" style="width:100%; accent-color: var(--red);" id="price-slider">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-top:5px;">
+              <span>₱0</span><span id="price-val">₱5000</span>
+            </div>
+          </div>
+          <button class="btn btn-red" style="width:100%" onclick="renderShop()">APPLY FILTERS</button>
+        </aside>
+        <main class="shop-main">
+          <div class="sort-bar">
+            <span id="shop-count">Showing X products</span>
+            <select class="sort-select" id="sort-select" onchange="renderShop()">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
+          <div class="grid grid-4" id="shop-grid"></div>
+          <div class="load-more">
+            <button class="btn btn-yellow" onclick="loadMore()">LOAD MORE 🎉</button>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- PAGE: NEW ARRIVALS -->
+    <div id="page-new-arrivals" class="page">
+      <h2 class="section-title wiggle-float">🆕 JUST LANDED! <br><span style="font-size:1.2rem;color:#888;font-family:'Nunito'">Fresh toys added every week</span></h2>
+      <div class="grid grid-4" id="new-grid"></div>
+      <div class="promo-banner" style="margin-top: 60px;">
+        <div class="promo-half promo-yellow" style="width:100%">
+          <h2>NOTIFY ME of new arrivals</h2>
+          <div style="display:flex;gap:10px; margin-top:20px;justify-content:center;z-index:2;position:relative;">
+            <input type="email" placeholder="Your email address" style="padding:15px; border-radius:30px; border:none; width:300px; outline:none;" class="form-control">
+            <button class="btn btn-red">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: SALE -->
+    <div id="page-sale" class="page">
+      <h2 class="section-title wiggle-float" style="color:var(--red);font-size:4rem;text-shadow: 2px 2px 0 var(--yellow);">🔥 AMAZING SALE! 🔥</h2>
+      <div style="text-align:center;">
+        <div class="sale-countdown wiggle-float" id="sale-timer">02d : 14h : 33m : 17s</div>
+      </div>
+      <div class="grid grid-4" id="sale-grid"></div>
+    </div>
+
+    <!-- PAGE: CATEGORIES -->
+    <div id="page-categories" class="page">
+      <h2 class="section-title wiggle-float">SHOP BY CATEGORY</h2>
+      <div class="cat-page-grid" id="cat-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- PAGE: ABOUT -->
+    <div id="page-about" class="page">
+      <section class="hero" style="padding:0">
+        <div class="hero-text text-center">
+          <h1 class="hero-title wiggle-float">OUR STORY 👑</h1>
+          <p class="hero-sub wiggle-float" style="margin: 0 auto; max-width:600px;text-align:center;">Origin story of Toy Kingdom as the Philippines' Amazing Toy Store. Where imagination comes to life and gravity ceases to exist!</p>
+        </div>
+      </section>
+      <div class="timeline">
+        <div class="timeline-item wiggle-float">
+          <div class="timeline-year">1992</div>
+          <p>Toy Kingdom founded in the Philippines</p>
+        </div>
+        <div class="timeline-item wiggle-float" style="animation-delay: 0.2s">
+          <div class="timeline-year">1995</div>
+          <p>Expanded to 10 stores nationwide</p>
+        </div>
+        <div class="timeline-item wiggle-float" style="animation-delay: 0.4s">
+          <div class="timeline-year">2000</div>
+          <p>Launched birthday registry service</p>
+        </div>
+        <div class="timeline-item wiggle-float" style="animation-delay: 0.6s">
+          <div class="timeline-year">2010</div>
+          <p>50+ stores across the Philippines</p>
+        </div>
+        <div class="timeline-item wiggle-float" style="animation-delay: 0.8s">
+          <div class="timeline-year">2025</div>
+          <p>New website with antigravity experience!</p>
+        </div>
+      </div>
+      <h2 class="section-title wiggle-float">WHY CHOOSE US</h2>
+      <div class="grid grid-4">
+        <div class="info-card floating flex-col" style="flex-direction:column;text-align:center;padding:40px;">
+          <div class="icon" style="font-size:4rem;">🏆</div><h3>Widest toy selection</h3>
+        </div>
+        <div class="info-card floating flex-col" style="flex-direction:column;text-align:center;padding:40px;animation-delay:0.3s">
+          <div class="icon" style="font-size:4rem;">💰</div><h3>Best prices guaranteed</h3>
+        </div>
+        <div class="info-card floating flex-col" style="flex-direction:column;text-align:center;padding:40px;animation-delay:0.6s">
+          <div class="icon" style="font-size:4rem;">🚚</div><h3>Fast delivery</h3>
+        </div>
+        <div class="info-card floating flex-col" style="flex-direction:column;text-align:center;padding:40px;animation-delay:0.9s">
+          <div class="icon" style="font-size:4rem;">🎁</div><h3>Expert gift wrapping</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: CONTACT -->
+    <div id="page-contact" class="page">
+      <h2 class="section-title wiggle-float">GET IN TOUCH 👋</h2>
+      <div class="contact-layout">
+        <form class="contact-form floating" id="contact-form" onsubmit="event.preventDefault(); alert('✅ Message sent! We\'ll reply within 24 hours'); this.reset();" style="animation-delay:0s">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Topic</label>
+            <select class="form-control">
+              <option>Order Inquiry</option>
+              <option>Product Question</option>
+              <option>Birthday Registry</option>
+              <option>Bulk Orders</option>
+              <option>Feedback</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea class="form-control" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-red">SEND MESSAGE 🚀</button>
+        </form>
+        <div class="contact-info">
+          <div class="info-card floating" style="animation-delay:0.2s">
+            <div class="icon">📞</div>
+            <div><strong>Call Us:</strong><br>09175578797 (Mon-Sat 9AM-6PM)</div>
+          </div>
+          <div class="info-card floating" style="animation-delay:0.4s">
+            <div class="icon">📧</div>
+            <div><strong>Email Us:</strong><br>customercare@toykingdom.com.ph</div>
+          </div>
+          <div class="info-card floating" style="animation-delay:0.6s">
+            <div class="icon">📍</div>
+            <div><strong>Head Office:</strong><br>Mandaluyong City, Philippines</div>
+          </div>
+          <div class="info-card floating" style="animation-delay:0.8s">
+            <div class="icon">💬</div>
+            <div><strong>Live Chat:</strong><br>Available on website</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="faq-box">
+        <h3 style="font-family:'Fredoka One';font-size:2rem;margin-bottom:20px;text-align:center;">Frequently Asked Questions</h3>
+        <div class="faq-accordion">
+          <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-question">How long does shipping take? <span>+</span></div>
+            <div class="faq-answer"><br>Metro Manila deliveries typically take 1-2 business days. Provincial deliveries may take 3-7 business days depending on the location. Same-day delivery is available for orders placed before 12 PM in Metro Manila.</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-question">Can I return or exchange a toy? <span>+</span></div>
+            <div class="faq-answer"><br>Yes! We offer a 30-day return policy for unopened and unused toys in their original condition and packaging. Just bring it to any Toy Kingdom store or contact our support team.</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-question">How do I set up a Birthday Registry? <span>+</span></div>
+            <div class="faq-answer"><br>You can create a Birthday Registry through your Account Dashboard or by visiting the customer service desk in any physical store. You'll receive a unique link to share with family and friends!</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-question">Do you offer bulk/school orders? <span>+</span></div>
+            <div class="faq-answer"><br>Absolutely. We provide special discounts for schools, orphanages, corporate events, and charities. Please use the contact form and select "Bulk Orders" to get a customized quote.</div>
+          </div>
+          <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-question">Is my payment information secure? <span>+</span></div>
+            <div class="faq-answer"><br>We use bank-level 256-bit SSL encryption to process all transactions. We accept GCash, Maya, major credit cards, and Cash on Delivery. Your financial data is never stored on our servers.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-bg-particles" id="footer-particles"></div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>About Toy Kingdom</h4>
+        <ul>
+          <li><a href="#" onclick="event.preventDefault();routeTo('/about');">Our Story</a></li>
+          <li><a href="#">Store Locator</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="#" onclick="event.preventDefault();routeTo('/contact');">Contact Us</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Returns & Exchanges</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>My Account</h4>
+        <ul>
+          <li><a href="#">Log In / Register</a></li>
+          <li><a href="#">Order History</a></li>
+          <li><a href="#">Wishlist</a></li>
+          <li><a href="#">Birthday Registry</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect With Us</h4>
+        <div class="social-icons" style="margin-bottom:20px;">
+          <a href="#">FB</a> <a href="#">IG</a> <a href="#">TK</a> <a href="#">YT</a>
+        </div>
+        <h4>Payment Options</h4>
+        <div style="display:flex;gap:10px;font-size:1.5rem;">
+          💳 📱 💵
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Toy Kingdom — The Amazing Toy Store | Privacy Policy | Terms of Service
+    </div>
+  </footer>
+</body>
