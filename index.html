@@ -341,12 +341,12 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
     <div class="cart-progress" id="cart-progress-container">
       <div class="cart-progress-bar" id="cart-progress-bar" style="width: 0%"></div>
     </div>
-    <div class="cart-progress-text" id="cart-progress-text">Add ₱1,500 more for free shipping!</div>
+    <div class="cart-progress-text" id="cart-progress-text">Add ₹1,500 more for free shipping!</div>
     <div class="cart-items" id="cart-items">
       <!-- Items inject here -->
     </div>
     <div class="cart-footer">
-      <div class="cart-subtotal"><span>Subtotal:</span> <span id="cart-subtotal">₱0</span></div>
+      <div class="cart-subtotal"><span>Subtotal:</span> <span id="cart-subtotal">₹0</span></div>
       <div style="display:flex; gap:10px;">
         <button class="btn btn-yellow" style="flex:1;" onclick="toggleCart()">CONTINUE</button>
         <button class="btn btn-red" style="flex:1;">CHECKOUT</button>
@@ -356,12 +356,11 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
 
   <header>
     <div class="top-bar">
-      <div class="marquee">🎉 FREE SHIPPING on orders ₱1,500+ | 🎁 BIRTHDAY REGISTRY available | ⭐ NEW ARRIVALS every week | 🚚 Same-day delivery in Metro Manila</div>
+      <div class="marquee">🎉 FREE SHIPPING on orders ₹1,500+ | 🎁 BIRTHDAY REGISTRY available | ⭐ NEW ARRIVALS every week | 🚚 Same-day delivery in Metro Manila</div>
     </div>
     <div class="header-main">
-      <a href="/" class="logo-container nav-link" data-route="home">
-        <div class="logo">👑 <span>T</span><span>O</span><span>Y</span> <span>K</span><span>I</span><span>N</span><span>G</span><span>D</span><span>O</span><span>M</span></div>
-        <span class="tagline">The Amazing Toy Store</span>
+      <a href="/" class="logo-container nav-link" data-route="home" style="display:flex;align-items:center;gap:10px;">
+        <img src="logo.jpg" alt="Toy Kingdom Logo" style="height:60px;width:auto;object-fit:contain;"/>
       </a>
       <div class="search-bar">
         <input type="text" placeholder="Search for toys..." id="search-input">
@@ -384,66 +383,138 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       <div class="nav-links"><a href="/contact" class="nav-link" data-route="contact">CONTACT</a></div>
       <div class="nav-links"><a href="/login" class="nav-link" data-route="login">LOGIN</a></div>
     </nav>
+
+  <!-- ===== PRODUCT IMAGE VIEWER MODAL ===== -->
+  <div id="img-viewer-overlay" onclick="closeImgViewer(event)" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;animation:fadeIn 0.25s ease;">
+    <div onclick="event.stopPropagation()" style="background:#1a1a2e;border-radius:24px;max-width:820px;width:93vw;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.08);">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div>
+          <div id="iv-name" style="font-family:'Fredoka One';font-size:1.4rem;color:white;"></div>
+          <div id="iv-brand" style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-top:2px;"></div>
+        </div>
+        <button onclick="closeImgViewer()" style="background:rgba(255,255,255,0.1);border:none;color:white;font-size:1.4rem;width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#10005;</button>
+      </div>
+      <!-- Main image area -->
+      <div style="position:relative;flex:1;overflow:hidden;background:#0d0d1a;min-height:280px;display:flex;align-items:center;justify-content:center;">
+        <button onclick="ivNav(-1)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);z-index:2;background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border:none;color:white;font-size:2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;">&#8249;</button>
+        <img id="iv-main-img" src="" alt="" style="max-height:420px;max-width:100%;object-fit:contain;transition:opacity 0.2s;border-radius:8px;">
+        <button onclick="ivNav(1)"  style="position:absolute;right:10px;top:50%;transform:translateY(-50%);z-index:2;background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border:none;color:white;font-size:2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;">&#8250;</button>
+      </div>
+      <!-- Description bar -->
+      <div style="padding:12px 22px;background:rgba(255,255,255,0.04);border-top:1px solid rgba(255,255,255,0.07);border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div id="iv-desc" style="color:rgba(255,255,255,0.8);font-size:0.9rem;line-height:1.5;"></div>
+            <div id="iv-counter" style="color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:4px;"></div>
+          </div>
+          <div style="text-align:right;">
+            <div id="iv-price" style="font-family:'Fredoka One';font-size:1.3rem;color:var(--red);"></div>
+            <div id="iv-oldprice" style="font-size:0.8rem;color:rgba(255,255,255,0.4);text-decoration:line-through;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Thumbnail strip -->
+      <div id="iv-thumbs" style="display:flex;gap:8px;padding:12px 22px;overflow-x:auto;background:#12122a;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.2) transparent;"></div>
+    </div>
+  </div>
   </header>
 
   <main id="app-container">
     
     <!-- PAGE: HOME -->
     <div id="page-home" class="page active">
-      <!-- STITCH HERO SECTION -->
-      <section class="hero" style="padding:60px 0 40px; min-height:85vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
-        <!-- Particle background dots -->
-        <div style="position:absolute;inset:0;pointer-events:none;">
-          <div class="floating" style="position:absolute;top:25%;left:3%;font-size:2.5rem;opacity:0.18;animation-delay:0s;">⭐</div>
-          <div class="floating" style="position:absolute;top:70%;left:22%;font-size:2rem;opacity:0.15;animation-delay:-2s;">✨</div>
-          <div class="floating" style="position:absolute;top:50%;right:22%;font-size:3rem;opacity:0.15;animation-delay:-1s;">🎈</div>
-          <div class="floating" style="position:absolute;bottom:20%;right:5%;font-size:2.5rem;opacity:0.18;animation-delay:-3s;">⭐</div>
+      <!-- ===== HERO SLIDESHOW ===== -->
+      <section id="hero-slideshow" style="padding:0;margin:-40px -5% 0;position:relative;overflow:hidden;width:calc(100% + 10%);aspect-ratio:16/6;min-height:400px;max-height:580px;">
+
+        <!-- SLIDE 1 -->
+        <div class="hero-slide" style="position:absolute;inset:0;opacity:1;transition:opacity 0.9s ease;z-index:2;">
+          <img src="hero_banner.png" alt="Toy Kingdom - The Gift of Play" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.15) 55%,rgba(0,0,0,0) 100%);"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 6%;max-width:580px;z-index:2;">
+            <span style="background:var(--yellow);color:var(--red);font-family:'Fredoka One';padding:5px 16px;border-radius:9999px;font-size:clamp(0.65rem,1vw,0.8rem);letter-spacing:1.5px;text-transform:uppercase;display:inline-block;margin-bottom:12px;width:fit-content;">&#127470;&#127475; India's Favourite Toy Store</span>
+            <h1 style="font-family:'Fredoka One';font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.1;margin:0 0 10px;color:white;text-shadow:3px 4px 0 rgba(0,0,0,0.4);">THE GIFT<br>OF <span style="color:var(--yellow);">PLAY!</span></h1>
+            <p style="font-size:clamp(0.8rem,1.4vw,1rem);color:rgba(255,255,255,0.92);margin:0 0 18px;line-height:1.6;text-shadow:1px 2px 4px rgba(0,0,0,0.45);">Send the perfect toy, anytime, anywhere!<br><strong style="color:var(--yellow);">Toy Kingdom — The Amazing Toy Store</strong></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+              <a href="/shop" class="nav-link" data-route="shop" style="background:var(--red);color:white;font-family:'Fredoka One';padding:10px 24px;border-radius:9999px;font-size:clamp(0.85rem,1.3vw,1rem);box-shadow:0 5px 0 #b71c1c;text-decoration:none;display:inline-block;">SHOP NOW &#128640;</a>
+              <a href="/sale" class="nav-link" data-route="sale" style="background:rgba(0,0,0,0.25);color:var(--yellow);font-family:'Fredoka One';padding:10px 24px;border-radius:9999px;font-size:clamp(0.85rem,1.3vw,1rem);border:2.5px solid var(--yellow);text-decoration:none;display:inline-block;">VIEW SALE &#128293;</a>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);border:2px solid var(--yellow);border-radius:10px;padding:6px 12px;color:white;font-family:'Fredoka One';font-size:clamp(0.7rem,1vw,0.85rem);text-align:center;">&#8377;500<br><span style="font-size:0.58rem;opacity:0.8;letter-spacing:1px;">GIFT CARD</span></div>
+              <div style="background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);border:2px solid var(--yellow);border-radius:10px;padding:6px 12px;color:white;font-family:'Fredoka One';font-size:clamp(0.7rem,1vw,0.85rem);text-align:center;">&#8377;1,000<br><span style="font-size:0.58rem;opacity:0.8;letter-spacing:1px;">GIFT CARD</span></div>
+              <div style="background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);border:2px solid var(--yellow);border-radius:10px;padding:6px 12px;color:white;font-family:'Fredoka One';font-size:clamp(0.7rem,1vw,0.85rem);text-align:center;">&#8377;2,000<br><span style="font-size:0.58rem;opacity:0.8;letter-spacing:1px;">GIFT CARD</span></div>
+            </div>
+          </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:2;">
-          <!-- LEFT: Content -->
-          <div>
-            <span class="wiggle-float" style="display:inline-block;background:var(--yellow);color:var(--red);font-family:'Fredoka One';padding:8px 22px;border-radius:9999px;transform:rotate(-2deg);font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;box-shadow:0 4px 10px rgba(0,0,0,0.1);margin-bottom:25px;">WELCOME TO THE KINGDOM 👑</span>
-            <h1 class="hero-title wiggle-float" style="animation-delay:0.15s;font-size:5rem;line-height:1.05;margin-bottom:20px;text-shadow:3px 3px 0 rgba(0,0,0,0.07);">
-              <span style="color:var(--red);display:block;">THE MOST</span>
-              <span style="color:var(--blue);display:block;font-size:1.15em;">AMAZING</span>
-              <span style="color:var(--red);display:block;">TOYS</span>
-              <span style="color:var(--blue);display:block;">IN THE WORLD!</span>
-            </h1>
-            <p class="wiggle-float" style="animation-delay:0.3s;font-size:1.25rem;color:rgba(26,35,126,0.75);margin-bottom:35px;max-width:460px;line-height:1.6;">Discover the magic of play with our curated collection of antigravity fun. Where imagination takes flight!</p>
-            <div class="hero-actions wiggle-float" style="animation-delay:0.45s;display:flex;gap:18px;flex-wrap:wrap;">
-              <a href="/shop" class="btn btn-red nav-link" data-route="shop" style="font-size:1.2rem;padding:16px 36px;border-radius:9999px;box-shadow:0 8px 0 #b71c1c,0 15px 25px rgba(227,30,36,0.3);display:flex;align-items:center;gap:10px;">SHOP NOW 🚀</a>
-              <a href="/sale" class="btn nav-link" data-route="sale" style="font-size:1.2rem;padding:16px 36px;border-radius:9999px;border:4px solid var(--yellow);color:var(--navy);background:transparent;">VIEW SALE 🔥</a>
-            </div>
-            <!-- Trust micro-badges -->
-            <div style="display:flex;gap:28px;margin-top:35px;opacity:0.55;" class="wiggle-float">
-              <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.9rem;">✅ Kid Safe</div>
-              <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.9rem;">🚚 Fast Delivery</div>
-              <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.9rem;">🔒 Secure Checkout</div>
+        <!-- SLIDE 2 -->
+        <div class="hero-slide" style="position:absolute;inset:0;opacity:0;transition:opacity 0.9s ease;z-index:1;">
+          <img src="hero_banner2.png" alt="Toy Kingdom - RC Cars" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.62) 0%,rgba(0,0,0,0.15) 55%,rgba(0,0,0,0) 100%);"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 6%;max-width:580px;z-index:2;">
+            <span style="background:var(--yellow);color:var(--red);font-family:'Fredoka One';padding:5px 16px;border-radius:9999px;font-size:clamp(0.65rem,1vw,0.8rem);letter-spacing:1.5px;text-transform:uppercase;display:inline-block;margin-bottom:12px;width:fit-content;">&#127950;&#65039; RC Cars &amp; More</span>
+            <h1 style="font-family:'Fredoka One';font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.1;margin:0 0 10px;color:white;text-shadow:3px 4px 0 rgba(0,0,0,0.4);">SPEED INTO<br><span style="color:var(--yellow);">BIG SAVINGS!</span></h1>
+            <p style="font-size:clamp(0.8rem,1.4vw,1rem);color:rgba(255,255,255,0.92);margin:0 0 18px;line-height:1.6;text-shadow:1px 2px 4px rgba(0,0,0,0.45);">Starting from &#8377;299 &middot; Upto 40% OFF!<br><strong style="color:var(--yellow);">Toy Kingdom — The Amazing Toy Store</strong></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <a href="/shop" class="nav-link" data-route="shop" style="background:var(--red);color:white;font-family:'Fredoka One';padding:10px 24px;border-radius:9999px;font-size:clamp(0.85rem,1.3vw,1rem);box-shadow:0 5px 0 #b71c1c;text-decoration:none;display:inline-block;">SHOP RC CARS &#127950;&#65039;</a>
+              <a href="/categories" class="nav-link" data-route="categories" style="background:rgba(0,0,0,0.25);color:var(--yellow);font-family:'Fredoka One';padding:10px 24px;border-radius:9999px;font-size:clamp(0.85rem,1.3vw,1rem);border:2.5px solid var(--yellow);text-decoration:none;display:inline-block;">ALL CATEGORIES</a>
             </div>
           </div>
+        </div>
 
-          <!-- RIGHT: Floating Toy Emoji Cards -->
-          <div style="position:relative;height:480px;display:flex;align-items:center;justify-content:center;">
-            <!-- Blur blobs -->
-            <div class="blob red" style="width:280px;height:280px;top:0;left:0;animation:pulseBlob 8s infinite alternate;"></div>
-            <div class="blob yellow" style="width:320px;height:320px;bottom:0;right:0;animation:pulseBlob 6s infinite alternate-reverse;"></div>
-            <div class="blob blue" style="width:260px;height:260px;top:40%;left:40%;animation:pulseBlob 7s infinite alternate;"></div>
-            <!-- 2x2 grid of emoji cards -->
-            <div style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-              <div class="floating" style="width:160px;height:160px;background:white;border-radius:1.8rem;box-shadow:0 15px 35px rgba(21,101,192,0.15);display:flex;align-items:center;justify-content:center;font-size:5.5rem;transform:rotate(6deg);animation-delay:0s;">🤖</div>
-              <div class="floating" style="width:160px;height:160px;background:white;border-radius:1.8rem;box-shadow:0 15px 35px rgba(21,101,192,0.15);display:flex;align-items:center;justify-content:center;font-size:5.5rem;transform:rotate(-12deg);margin-top:40px;animation-delay:-1.5s;">🚀</div>
-              <div class="floating" style="width:160px;height:160px;background:white;border-radius:1.8rem;box-shadow:0 15px 35px rgba(21,101,192,0.15);display:flex;align-items:center;justify-content:center;font-size:5.5rem;transform:rotate(-3deg);margin-top:-30px;animation-delay:-2.5s;">🎮</div>
-              <div class="floating" style="width:160px;height:160px;background:white;border-radius:1.8rem;box-shadow:0 15px 35px rgba(21,101,192,0.15);display:flex;align-items:center;justify-content:center;font-size:5.5rem;transform:rotate(12deg);animation-delay:-3.5s;">🦕</div>
-            </div>
-            <!-- 50% OFF badge -->
-            <div style="position:absolute;bottom:-10px;right:-10px;background:var(--red);color:white;font-family:'Fredoka One';padding:22px;border-radius:9999px;box-shadow:0 10px 30px rgba(227,30,36,0.4);transform:rotate(12deg);display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid white;z-index:3;">
-              <span style="font-size:1.8rem;line-height:1;">50%</span>
-              <span style="font-size:0.85rem;">OFF!</span>
+        <!-- SLIDE 3 -->
+        <div class="hero-slide" style="position:absolute;inset:0;opacity:0;transition:opacity 0.9s ease;z-index:1;">
+          <img src="hero_banner3.png" alt="Toy Kingdom - New Arrivals" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(60,0,0,0.68) 0%,rgba(60,0,0,0.18) 55%,rgba(0,0,0,0) 100%);"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 6%;max-width:580px;z-index:2;">
+            <span style="background:var(--yellow);color:var(--red);font-family:'Fredoka One';padding:5px 16px;border-radius:9999px;font-size:clamp(0.65rem,1vw,0.8rem);letter-spacing:1.5px;text-transform:uppercase;display:inline-block;margin-bottom:12px;width:fit-content;">&#10024; New Arrivals Just In!</span>
+            <h1 style="font-family:'Fredoka One';font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.1;margin:0 0 10px;color:white;text-shadow:3px 4px 0 rgba(0,0,0,0.45);">THE PERFECT<br><span style="color:var(--yellow);">GIFT AWAITS!</span></h1>
+            <p style="font-size:clamp(0.8rem,1.4vw,1rem);color:rgba(255,255,255,0.92);margin:0 0 18px;line-height:1.6;text-shadow:1px 2px 4px rgba(0,0,0,0.45);">Dolls, Kitchen Sets, Role Play &amp; more!<br><strong style="color:var(--yellow);">Toy Kingdom — The Amazing Toy Store</strong></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <a href="/new-arrivals" class="nav-link" data-route="new-arrivals" style="background:var(--red);color:white;font-family:'Fredoka One';padding:10px 24px;border-radius:9999px;font-size:clamp(0.85rem,1.3vw,1rem);box-shadow:0 5px 0 #b71c1c;text-decoration:none;display:inline-block;">NEW ARRIVALS &#10024;</a>
+              <a href="/shop" class="nav-link" data-route="shop" style="background:rgba(0,0,0,0.25);color:var(--yellow);font-family:'Fredoka One';padding:10px 24px;border-radius:9999px;font-size:clamp(0.85rem,1.3vw,1rem);border:2.5px solid var(--yellow);text-decoration:none;display:inline-block;">SHOP ALL &#128722;</a>
             </div>
           </div>
+        </div>
+
+        <!-- Prev/Next -->
+        <button onclick="heroSlide(-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,0.4);color:white;font-size:1.5rem;width:42px;height:42px;border-radius:50%;cursor:pointer;line-height:1;margin-bottom:30px;">&#8249;</button>
+        <button onclick="heroSlide(1)"  style="position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,0.4);color:white;font-size:1.5rem;width:42px;height:42px;border-radius:50%;cursor:pointer;line-height:1;margin-bottom:30px;">&#8250;</button>
+
+        <!-- Dots -->
+        <div style="position:absolute;bottom:38px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:7px;align-items:center;">
+          <button class="hero-dot" onclick="heroGoTo(0)" style="width:22px;height:10px;border-radius:5px;background:white;border:none;cursor:pointer;opacity:1;transition:all 0.3s;padding:0;"></button>
+          <button class="hero-dot" onclick="heroGoTo(1)" style="width:10px;height:10px;border-radius:50%;background:white;border:none;cursor:pointer;opacity:0.4;transition:all 0.3s;padding:0;"></button>
+          <button class="hero-dot" onclick="heroGoTo(2)" style="width:10px;height:10px;border-radius:50%;background:white;border:none;cursor:pointer;opacity:0.4;transition:all 0.3s;padding:0;"></button>
+        </div>
+
+        <!-- Trust bar -->
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.52);backdrop-filter:blur(4px);padding:7px 5%;display:flex;gap:24px;z-index:5;flex-wrap:wrap;">
+          <div style="color:white;font-weight:700;font-size:0.75rem;display:flex;align-items:center;gap:5px;">&#10003; Kid Safe</div>
+          <div style="color:white;font-weight:700;font-size:0.75rem;display:flex;align-items:center;gap:5px;">&#128666; Pan-India Delivery</div>
+          <div style="color:white;font-weight:700;font-size:0.75rem;display:flex;align-items:center;gap:5px;">&#127981; Direct Manufacturer</div>
+          <div style="color:white;font-weight:700;font-size:0.75rem;display:flex;align-items:center;gap:5px;">&#128176; Wholesale Prices</div>
+          <div style="color:white;font-weight:700;font-size:0.75rem;display:flex;align-items:center;gap:5px;">&#128205; Nagdevi St, Mumbai</div>
         </div>
       </section>
+      <script>
+        (function(){
+          const slides = document.querySelectorAll('#hero-slideshow .hero-slide');
+          const dots   = document.querySelectorAll('#hero-slideshow .hero-dot');
+          let cur = 0, timer;
+          function show(n) {
+            slides[cur].style.opacity = '0'; slides[cur].style.zIndex = '1';
+            dots[cur].style.opacity = '0.4'; dots[cur].style.width = '10px'; dots[cur].style.borderRadius = '50%';
+            cur = (n + slides.length) % slides.length;
+            slides[cur].style.opacity = '1'; slides[cur].style.zIndex = '2';
+            dots[cur].style.opacity = '1'; dots[cur].style.width = '22px'; dots[cur].style.borderRadius = '5px';
+          }
+          window.heroSlide = function(d){ clearInterval(timer); show(cur + d); timer = setInterval(function(){ show(cur + 1); }, 5000); };
+          window.heroGoTo  = function(n){ clearInterval(timer); show(n);       timer = setInterval(function(){ show(cur + 1); }, 5000); };
+          timer = setInterval(function(){ show(cur + 1); }, 5000);
+        })();
+      </script>
+
 
       <div class="categories-row" id="quick-cats">
         <!-- Rendered by JS -->
@@ -478,7 +549,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       </div>
 
       <div class="trust-badges wiggle-float">
-        <div class="trust-badge"><span class="icon">🚚</span>Free Shipping ₱1,500+</div>
+        <div class="trust-badge"><span class="icon">🚚</span>Free Shipping ₹1,500+</div>
         <div class="trust-badge"><span class="icon">🔄</span>30-Day Returns</div>
         <div class="trust-badge"><span class="icon">🔒</span>Secure Checkout</div>
         <div class="trust-badge"><span class="icon">🎁</span>Gift Wrapping</div>
@@ -498,7 +569,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
             <h4>Price Range</h4>
             <input type="range" min="0" max="5000" value="5000" style="width:100%; accent-color: var(--red);" id="price-slider">
             <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-top:5px;">
-              <span>₱0</span><span id="price-val">₱5000</span>
+              <span>₹0</span><span id="price-val">₹5000</span>
             </div>
           </div>
           <button class="btn btn-red" style="width:100%" onclick="renderShop()">APPLY FILTERS</button>
@@ -558,29 +629,33 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       <section class="hero" style="padding:0">
         <div class="hero-text text-center">
           <h1 class="hero-title wiggle-float">OUR STORY 👑</h1>
-          <p class="hero-sub wiggle-float" style="margin: 0 auto; max-width:600px;text-align:center;">Origin story of Toy Kingdom as the Philippines' Amazing Toy Store. Where imagination comes to life and gravity ceases to exist!</p>
+          <p class="hero-sub wiggle-float" style="margin: 0 auto; max-width:650px;text-align:center;">From a humble wholesale begin to a Pan-India toy powerhouse — Toy Kingdom is built on variety, quality, and a passion for play.</p>
         </div>
       </section>
       <div class="timeline">
         <div class="timeline-item wiggle-float">
-          <div class="timeline-year">1992</div>
-          <p>Toy Kingdom founded in the Philippines</p>
+          <div class="timeline-year">2020</div>
+          <p>🧸 Established in Mumbai — entered the toy industry as a growing wholesale player</p>
         </div>
         <div class="timeline-item wiggle-float" style="animation-delay: 0.2s">
-          <div class="timeline-year">1995</div>
-          <p>Expanded to 10 stores nationwide</p>
+          <div class="timeline-year">2021</div>
+          <p>🏪 Focused on wholesaling toys across local markets in Mumbai and surrounding regions</p>
         </div>
         <div class="timeline-item wiggle-float" style="animation-delay: 0.4s">
-          <div class="timeline-year">2000</div>
-          <p>Launched birthday registry service</p>
+          <div class="timeline-year">2022</div>
+          <p>🏭 Expanded into distribution and manufacturing — building a strong, reliable supply chain</p>
         </div>
         <div class="timeline-item wiggle-float" style="animation-delay: 0.6s">
-          <div class="timeline-year">2010</div>
-          <p>50+ stores across the Philippines</p>
+          <div class="timeline-year">2023</div>
+          <p>📍 Rooted at Nagdevi Street, Mumbai — a key hub for toys and wholesale markets across India</p>
         </div>
         <div class="timeline-item wiggle-float" style="animation-delay: 0.8s">
+          <div class="timeline-year">2024</div>
+          <p>🇮🇳 Built a Pan-India customer base, serving retailers and businesses nationwide</p>
+        </div>
+        <div class="timeline-item wiggle-float" style="animation-delay: 1s">
           <div class="timeline-year">2025</div>
-          <p>New website with antigravity experience!</p>
+          <p>🚀 Known for variety, quality, and competitive pricing — now online to serve you better!</p>
         </div>
       </div>
       <h2 class="section-title wiggle-float">WHY CHOOSE US</h2>
@@ -632,15 +707,15 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
         <div class="contact-info">
           <div class="info-card floating" style="animation-delay:0.2s">
             <div class="icon">📞</div>
-            <div><strong>Call Us:</strong><br>09175578797 (Mon-Sat 9AM-6PM)</div>
+            <div><strong>Call Us:</strong><br>+91 9167777040 (Mon-Sat 9AM-6PM)</div>
           </div>
           <div class="info-card floating" style="animation-delay:0.4s">
             <div class="icon">📧</div>
-            <div><strong>Email Us:</strong><br>customercare@toykingdom.com.ph</div>
+            <div><strong>Email Us:</strong><br>info@toykingdom.in</div>
           </div>
           <div class="info-card floating" style="animation-delay:0.6s">
             <div class="icon">📍</div>
-            <div><strong>Head Office:</strong><br>Mandaluyong City, Philippines</div>
+            <div><strong>Head Office:</strong><br>Nagdevi Street, Mumbai</div>
           </div>
           <div class="info-card floating" style="animation-delay:0.8s">
             <div class="icon">💬</div>
@@ -789,37 +864,146 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
 </body>
 
 <script>
+// Real category photos from folders
+const categoryImages = {
+  "Assorted Toys": [
+    "assorted toys/diy plane.jpg",
+    "assorted toys/flying gyrosphere.jpg",
+    "assorted toys/hand sensor track set.jpg",
+    "assorted toys/labubu wristbands.jpg",
+    "assorted toys/watch set.jpg"
+  ],
+  "Battery Operated Items": [
+    "baterry operated items/cute electric dog.jpg",
+    "baterry operated items/cute electric elephant.jpg",
+    "baterry operated items/dancing monkey.jpg",
+    "baterry operated items/dancing penguin.jpg",
+    "baterry operated items/smoke train.jpg"
+  ],
+  "Box Items": [
+    "box items/cat piano.jpg",
+    "box items/cow piano.jpg",
+    "box items/dino piano.jpg",
+    "box items/mobile phone.jpg",
+    "box items/push and go teddies.jpg"
+  ],
+  "Die Cast Toys": [
+    "die cast/apollo die cast model.jpg",
+    "die cast/dodge challenger die cast model.jpg",
+    "die cast/lamborghini die cast model.jpg",
+    "die cast/mclaren die cast model.jpg",
+    "die cast/pagani die cast model.jpg"
+  ],
+  "Dolls": [
+    "dolls/doll set with accessories.jpg",
+    "dolls/doll set with diaper.jpg",
+    "dolls/doll set with food.jpg",
+    "dolls/doll set.jpg",
+    "dolls/doll sets with clothes.jpg"
+  ],
+  "Guns": [
+    "guns copy/AK gel blaster gun.jpg",
+    "guns copy/AUG gel blaster gun.jpg",
+    "guns copy/battery operated gun box.jpg",
+    "guns copy/M416 gel blaster gun.jpg",
+    "guns copy/MP5 gel blaster gun.jpg"
+  ],
+  "RC Cars": [
+    "rc cars/Camera rc car.jpg",
+    "rc cars/high speed drift rc car.jpg",
+    "rc cars/Lamborghini drift rc car.jpg",
+    "rc cars/Neon drift rc car.jpg",
+    "rc cars/wall climbing rc car.jpg"
+  ],
+  "Role Play Toys": [
+    "roleplay toys/beauty set.jpg",
+    "roleplay toys/doctor set.jpg",
+    "roleplay toys/kitchen chef set.jpg",
+    "roleplay toys/kitchen set.jpg",
+    "roleplay toys/little chef set.jpg"
+  ],
+  "Trains and Track Sets": [
+    "trains and track sets/big thomas train track set.jpg",
+    "trains and track sets/hand sensor track set..jpg",
+    "trains and track sets/hand sensor track set.jpg",
+    "trains and track sets/hand sensor track set.jpg.jpg",
+    "trains and track sets/thomas train track set.jpg"
+  ]
+};
+
 const products = [
-  {id: 1, name: "LEGO City Police Set", brand: "LEGO", price: 999, oldPrice: 1299, rating: 4.8, reviews: 234, img: "🧱", color: "#FFCDD2", cat: "Boys", isNew: false, isSale: true, age: "6-8"},
-  {id: 2, name: "Barbie Dreamhouse 2025", brand: "Barbie", price: 2999, oldPrice: 3499, rating: 4.9, reviews: 189, img: "👸", color: "#F8BBD0", cat: "Girls", isNew: true, isSale: true, age: "3-5"},
-  {id: 3, name: "Hot Wheels Ultimate Garage", brand: "Hot Wheels", price: 1499, oldPrice: 1899, rating: 4.7, reviews: 312, img: "🚗", color: "#FFE0B2", cat: "Boys,Riding", isNew: false, isSale: true, age: "6-8"},
-  {id: 4, name: "Nerf Elite 2.0 Blaster", brand: "Nerf", price: 1299, oldPrice: 1599, rating: 4.6, reviews: 156, img: "🎯", color: "#B2EBF2", cat: "Boys,Outdoor", isNew: false, isSale: true, age: "9-12"},
-  {id: 5, name: "Play-Doh Mega Pack", brand: "Hasbro", price: 449, oldPrice: 549, rating: 4.8, reviews: 421, img: "🎨", color: "#D1C4E9", cat: "Arts & Crafts", isNew: false, isSale: true, age: "3-5"},
-  {id: 6, name: "Transformers Optimus", brand: "Hasbro", price: 1799, oldPrice: 2199, rating: 4.9, reviews: 98, img: "🤖", color: "#C5CAE9", cat: "Boys,Games", isNew: true, isSale: true, age: "6-8"},
-  {id: 7, name: "Ravensburger 500pc Puzzle", brand: "Ravensburger", price: 599, oldPrice: 749, rating: 4.7, reviews: 267, img: "🧩", color: "#DCEDC8", cat: "Learning", isNew: false, isSale: true, age: "9-12"},
-  {id: 8, name: "Dinosaur Figure Set", brand: "Mattel", price: 699, oldPrice: 899, rating: 4.8, reviews: 344, img: "🦕", color: "#C8E6C9", cat: "Boys,Learning", isNew: false, isSale: true, age: "3-5"},
-  {id: 9, name: "Baby Learning Blocks", brand: "Fisher-Price", price: 399, oldPrice: 599, rating: 4.5, reviews: 541, img: "🧊", color: "#FFF9C4", cat: "Baby,Learning", isNew: false, isSale: false, age: "0-2"},
-  {id: 10, name: "Magical Princess Wand", brand: "Disney", price: 299, oldPrice: 399, rating: 4.6, reviews: 120, img: "🪄", color: "#Fce4ec", cat: "Girls,Dress Up", isNew: true, isSale: false, age: "3-5"},
-  {id: 11, name: "Outdoor Splash Pad", brand: "Intex", price: 899, oldPrice: 1299, rating: 4.7, reviews: 210, img: "🌊", color: "#E0F7FA", cat: "Outdoor", isNew: false, isSale: true, age: "3-5"},
-  {id: 12, name: "Party Hat Set", brand: "PartyCity", price: 199, oldPrice: 250, rating: 4.2, reviews: 50, img: "🎉", color: "#FFF3E0", cat: "Party", isNew: false, isSale: false, age: "3-5"}
+  // Assorted Toys
+  {id:1,  name:"DIY Plane",                brand:"Toy Kingdom", price:349, oldPrice:449, rating:4.6, reviews:87,  imgPath:"assorted toys/diy plane.jpg",                   img:"✈️", color:"#FFCDD2", cat:"Assorted Toys",        isNew:true,  isSale:true,  age:"6-8"},
+  {id:2,  name:"Flying Gyrosphere",         brand:"Toy Kingdom", price:499, oldPrice:649, rating:4.8, reviews:134, imgPath:"assorted toys/flying gyrosphere.jpg",            img:"🔵", color:"#FFCDD2", cat:"Assorted Toys",        isNew:false, isSale:true,  age:"6-8"},
+  {id:3,  name:"Hand Sensor Track Set",     brand:"Toy Kingdom", price:599, oldPrice:799, rating:4.7, reviews:212, imgPath:"assorted toys/hand sensor track set.jpg",        img:"🛤️", color:"#FFCDD2", cat:"Assorted Toys",        isNew:false, isSale:false, age:"3-5"},
+  {id:4,  name:"Labubu Wristbands",         brand:"Toy Kingdom", price:199, oldPrice:249, rating:4.5, reviews:67,  imgPath:"assorted toys/labubu wristbands.jpg",           img:"💚", color:"#FFCDD2", cat:"Assorted Toys",        isNew:true,  isSale:false, age:"3-5"},
+  {id:5,  name:"Watch Set",                brand:"Toy Kingdom", price:299, oldPrice:399, rating:4.4, reviews:189, imgPath:"assorted toys/watch set.jpg",                   img:"⌚", color:"#FFCDD2", cat:"Assorted Toys",        isNew:false, isSale:true,  age:"6-8"},
+  // Battery Operated Items
+  {id:6,  name:"Cute Electric Dog",         brand:"Toy Kingdom", price:449, oldPrice:599, rating:4.7, reviews:241, imgPath:"baterry operated items/cute electric dog.jpg",   img:"🐶", color:"#FFE0B2", cat:"Battery Operated Items", isNew:false, isSale:true,  age:"3-5"},
+  {id:7,  name:"Cute Electric Elephant",    brand:"Toy Kingdom", price:499, oldPrice:649, rating:4.8, reviews:178, imgPath:"baterry operated items/cute electric elephant.jpg",img:"🐘", color:"#FFE0B2", cat:"Battery Operated Items", isNew:true,  isSale:false, age:"3-5"},
+  {id:8,  name:"Dancing Monkey",            brand:"Toy Kingdom", price:399, oldPrice:499, rating:4.6, reviews:312, imgPath:"baterry operated items/dancing monkey.jpg",      img:"🐒", color:"#FFE0B2", cat:"Battery Operated Items", isNew:false, isSale:true,  age:"3-5"},
+  {id:9,  name:"Dancing Penguin",           brand:"Toy Kingdom", price:349, oldPrice:449, rating:4.5, reviews:89,  imgPath:"baterry operated items/dancing penguin.jpg",     img:"🐧", color:"#FFE0B2", cat:"Battery Operated Items", isNew:true,  isSale:true,  age:"0-2"},
+  {id:10, name:"Smoke Train",              brand:"Toy Kingdom", price:599, oldPrice:799, rating:4.9, reviews:155, imgPath:"baterry operated items/smoke train.jpg",         img:"🚂", color:"#FFE0B2", cat:"Battery Operated Items", isNew:false, isSale:false, age:"3-5"},
+  // Box Items
+  {id:11, name:"Cat Piano",                brand:"Toy Kingdom", price:349, oldPrice:449, rating:4.5, reviews:76,  imgPath:"box items/cat piano.jpg",                       img:"🐱", color:"#FFF9C4", cat:"Box Items",           isNew:false, isSale:true,  age:"0-2"},
+  {id:12, name:"Cow Piano",                brand:"Toy Kingdom", price:349, oldPrice:449, rating:4.6, reviews:123, imgPath:"box items/cow piano.jpg",                       img:"🐮", color:"#FFF9C4", cat:"Box Items",           isNew:true,  isSale:false, age:"0-2"},
+  {id:13, name:"Dino Piano",               brand:"Toy Kingdom", price:399, oldPrice:499, rating:4.7, reviews:98,  imgPath:"box items/dino piano.jpg",                      img:"🦕", color:"#FFF9C4", cat:"Box Items",           isNew:false, isSale:true,  age:"0-2"},
+  {id:14, name:"Mobile Phone Toy",          brand:"Toy Kingdom", price:249, oldPrice:299, rating:4.4, reviews:54,  imgPath:"box items/mobile phone.jpg",                    img:"📱", color:"#FFF9C4", cat:"Box Items",           isNew:false, isSale:false, age:"0-2"},
+  {id:15, name:"Push and Go Teddies",       brand:"Toy Kingdom", price:299, oldPrice:399, rating:4.6, reviews:87,  imgPath:"box items/push and go teddies.jpg",             img:"🧸", color:"#FFF9C4", cat:"Box Items",           isNew:true,  isSale:true,  age:"0-2"},
+  // Die Cast Toys
+  {id:16, name:"Apollo Die Cast Model",     brand:"Metal Motors", price:299, oldPrice:399, rating:4.8, reviews:241, imgPath:"die cast/apollo die cast model.jpg",           img:"🚗", color:"#FFE0B2", cat:"Die Cast Toys",       isNew:false, isSale:true,  age:"3-5"},
+  {id:17, name:"Dodge Challenger Die Cast", brand:"Metal Motors", price:349, oldPrice:449, rating:4.7, reviews:178, imgPath:"die cast/dodge challenger die cast model.jpg",  img:"🚗", color:"#FFE0B2", cat:"Die Cast Toys",       isNew:true,  isSale:false, age:"6-8"},
+  {id:18, name:"Lamborghini Die Cast Model",brand:"Metal Motors", price:399, oldPrice:499, rating:4.9, reviews:312, imgPath:"die cast/lamborghini die cast model.jpg",       img:"🚗", color:"#FFE0B2", cat:"Die Cast Toys",       isNew:false, isSale:true,  age:"6-8"},
+  {id:19, name:"McLaren Die Cast Model",    brand:"Metal Motors", price:349, oldPrice:449, rating:4.8, reviews:89,  imgPath:"die cast/mclaren die cast model.jpg",          img:"🚗", color:"#FFE0B2", cat:"Die Cast Toys",       isNew:true,  isSale:true,  age:"9-12"},
+  {id:20, name:"Pagani Die Cast Model",     brand:"Metal Motors", price:299, oldPrice:379, rating:4.7, reviews:155, imgPath:"die cast/pagani die cast model.jpg",           img:"🚗", color:"#FFE0B2", cat:"Die Cast Toys",       isNew:false, isSale:false, age:"3-5"},
+  // Dolls
+  {id:21, name:"Doll Set with Accessories", brand:"Toy Kingdom", price:599, oldPrice:799, rating:4.7, reviews:312, imgPath:"dolls/doll set with accessories.jpg",           img:"🪆", color:"#FCE4EC", cat:"Dolls",              isNew:false, isSale:true,  age:"3-5"},
+  {id:22, name:"Doll Set with Diaper",      brand:"Toy Kingdom", price:499, oldPrice:649, rating:4.5, reviews:189, imgPath:"dolls/doll set with diaper.jpg",               img:"🪆", color:"#FCE4EC", cat:"Dolls",              isNew:true,  isSale:false, age:"0-2"},
+  {id:23, name:"Doll Set with Food",        brand:"Toy Kingdom", price:549, oldPrice:699, rating:4.8, reviews:76,  imgPath:"dolls/doll set with food.jpg",                 img:"🪆", color:"#FCE4EC", cat:"Dolls",              isNew:false, isSale:true,  age:"3-5"},
+  {id:24, name:"Doll Set",                 brand:"Toy Kingdom", price:449, oldPrice:599, rating:4.6, reviews:241, imgPath:"dolls/doll set.jpg",                           img:"🪆", color:"#FCE4EC", cat:"Dolls",              isNew:true,  isSale:true,  age:"3-5"},
+  {id:25, name:"Doll Sets with Clothes",    brand:"Toy Kingdom", price:649, oldPrice:849, rating:4.9, reviews:134, imgPath:"dolls/doll sets with clothes.jpg",             img:"🪆", color:"#FCE4EC", cat:"Dolls",              isNew:false, isSale:false, age:"3-5"},
+  // Guns
+  {id:26, name:"AK Gel Blaster Gun",        brand:"PlayBlast",   price:549, oldPrice:699, rating:4.5, reviews:76,  imgPath:"guns copy/AK gel blaster gun.jpg",             img:"🎯", color:"#B2EBF2", cat:"Guns",              isNew:false, isSale:true,  age:"9-12"},
+  {id:27, name:"AUG Gel Blaster Gun",       brand:"PlayBlast",   price:599, oldPrice:749, rating:4.6, reviews:123, imgPath:"guns copy/AUG gel blaster gun.jpg",            img:"🎯", color:"#B2EBF2", cat:"Guns",              isNew:true,  isSale:false, age:"9-12"},
+  {id:28, name:"Battery Operated Gun Box",  brand:"PlayBlast",   price:449, oldPrice:549, rating:4.4, reviews:98,  imgPath:"guns copy/battery operated gun box.jpg",       img:"🎯", color:"#B2EBF2", cat:"Guns",              isNew:false, isSale:true,  age:"6-8"},
+  {id:29, name:"M416 Gel Blaster Gun",      brand:"PlayBlast",   price:649, oldPrice:849, rating:4.7, reviews:54,  imgPath:"guns copy/M416 gel blaster gun.jpg",           img:"🎯", color:"#B2EBF2", cat:"Guns",              isNew:false, isSale:true,  age:"9-12"},
+  {id:30, name:"MP5 Gel Blaster Gun",       brand:"PlayBlast",   price:499, oldPrice:649, rating:4.6, reviews:87,  imgPath:"guns copy/MP5 gel blaster gun.jpg",            img:"🎯", color:"#B2EBF2", cat:"Guns",              isNew:true,  isSale:false, age:"9-12"},
+  // RC Cars
+  {id:31, name:"Camera RC Car",             brand:"SpeedRacer",  price:999, oldPrice:1299,rating:4.8, reviews:201, imgPath:"rc cars/Camera rc car.jpg",                    img:"🏎️", color:"#E0F7FA", cat:"RC Cars",           isNew:true,  isSale:true,  age:"6-8"},
+  {id:32, name:"High Speed Drift RC Car",   brand:"SpeedRacer",  price:849, oldPrice:1099,rating:4.9, reviews:145, imgPath:"rc cars/high speed drift rc car.jpg",          img:"🏎️", color:"#E0F7FA", cat:"RC Cars",           isNew:false, isSale:false, age:"9-12"},
+  {id:33, name:"Lamborghini Drift RC Car",  brand:"SpeedRacer",  price:1199,oldPrice:1499,rating:4.7, reviews:278, imgPath:"rc cars/Lamborghini drift rc car.jpg",         img:"🏎️", color:"#E0F7FA", cat:"RC Cars",           isNew:false, isSale:true,  age:"9-12"},
+  {id:34, name:"Neon Drift RC Car",         brand:"SpeedRacer",  price:749, oldPrice:999, rating:4.8, reviews:93,  imgPath:"rc cars/Neon drift rc car.jpg",               img:"🏎️", color:"#E0F7FA", cat:"RC Cars",           isNew:true,  isSale:false, age:"6-8"},
+  {id:35, name:"Wall Climbing RC Car",      brand:"SpeedRacer",  price:899, oldPrice:1199,rating:4.6, reviews:167, imgPath:"rc cars/wall climbing rc car.jpg",            img:"🏎️", color:"#E0F7FA", cat:"RC Cars",           isNew:false, isSale:true,  age:"6-8"},
+  // Role Play Toys
+  {id:36, name:"Beauty Set",               brand:"Toy Kingdom", price:349, oldPrice:449, rating:4.6, reviews:189, imgPath:"roleplay toys/beauty set.jpg",                 img:"💄", color:"#F8BBD0", cat:"Role Play Toys",     isNew:true,  isSale:true,  age:"3-5"},
+  {id:37, name:"Doctor Set",               brand:"Toy Kingdom", price:299, oldPrice:399, rating:4.7, reviews:421, imgPath:"roleplay toys/doctor set.jpg",                 img:"🩺", color:"#F8BBD0", cat:"Role Play Toys",     isNew:false, isSale:true,  age:"3-5"},
+  {id:38, name:"Kitchen Chef Set",          brand:"Toy Kingdom", price:449, oldPrice:599, rating:4.8, reviews:98,  imgPath:"roleplay toys/kitchen chef set.jpg",           img:"👨‍🍳", color:"#F8BBD0", cat:"Role Play Toys",     isNew:false, isSale:false, age:"3-5"},
+  {id:39, name:"Kitchen Set",              brand:"Toy Kingdom", price:399, oldPrice:499, rating:4.5, reviews:312, imgPath:"roleplay toys/kitchen set.jpg",                img:"🍳", color:"#F8BBD0", cat:"Role Play Toys",     isNew:true,  isSale:true,  age:"3-5"},
+  {id:40, name:"Little Chef Set",           brand:"Toy Kingdom", price:349, oldPrice:449, rating:4.6, reviews:120, imgPath:"roleplay toys/little chef set.jpg",            img:"🍽️", color:"#F8BBD0", cat:"Role Play Toys",     isNew:false, isSale:false, age:"3-5"},
+  // Trains and Track Sets
+  {id:41, name:"Big Thomas Train Track Set",brand:"TrackMaster", price:999, oldPrice:1299,rating:4.9, reviews:312, imgPath:"trains and track sets/big thomas train track set.jpg", img:"🚂", color:"#FFF9C4", cat:"Trains and Track Sets", isNew:false, isSale:true,  age:"3-5"},
+  {id:42, name:"Hand Sensor Track Set",     brand:"TrackMaster", price:799, oldPrice:999, rating:4.7, reviews:189, imgPath:"trains and track sets/hand sensor track set.jpg",      img:"🚂", color:"#FFF9C4", cat:"Trains and Track Sets", isNew:true,  isSale:false, age:"3-5"},
+  {id:43, name:"Hand Sensor Track Set Pro", brand:"TrackMaster", price:899, oldPrice:1099,rating:4.8, reviews:76,  imgPath:"trains and track sets/hand sensor track set..jpg",     img:"🚂", color:"#FFF9C4", cat:"Trains and Track Sets", isNew:false, isSale:true,  age:"3-5"},
+  {id:44, name:"Hand Sensor Track Set Deluxe",brand:"TrackMaster",price:1099,oldPrice:1399,rating:4.6,reviews:241, imgPath:"trains and track sets/hand sensor track set.jpg.jpg",  img:"🚂", color:"#FFF9C4", cat:"Trains and Track Sets", isNew:true,  isSale:true,  age:"3-5"},
+  {id:45, name:"Thomas Train Track Set",    brand:"TrackMaster", price:699, oldPrice:899, rating:4.8, reviews:134, imgPath:"trains and track sets/thomas train track set.jpg",    img:"🚂", color:"#FFF9C4", cat:"Trains and Track Sets", isNew:false, isSale:false, age:"0-2"}
 ];
 
 const categories = [
-  {name: "Boys", icon: "🤖", count: 234, color: "linear-gradient(135deg, #FF5252, #D50000)"},
-  {name: "Girls", icon: "👧", count: 198, color: "linear-gradient(135deg, #FF80AB, #C51162)"},
-  {name: "Baby", icon: "👶", count: 156, color: "linear-gradient(135deg, #FFEA00, #FFAB00)"},
-  {name: "Learning", icon: "🧩", count: 143, color: "linear-gradient(135deg, #40C4FF, #0091EA)"},
-  {name: "Games", icon: "🎮", count: 112, color: "linear-gradient(135deg, #E040FB, #AA00FF)"},
-  {name: "Arts & Crafts", icon: "🎨", count: 89, color: "linear-gradient(135deg, #FF9100, #DD2C00)"},
-  {name: "Riding", icon: "🚴", count: 67, color: "linear-gradient(135deg, #00E676, #00C853)"},
-  {name: "Outdoor", icon: "🌊", count: 78, color: "linear-gradient(135deg, #18FFFF, #00B8D4)"},
-  {name: "Dress Up", icon: "🎭", count: 54, color: "linear-gradient(135deg, #FF4081, #C51162)"},
-  {name: "Party", icon: "🎉", count: 43, color: "linear-gradient(135deg, #FFD740, #FF6D00)"}
+  {name:"Assorted Toys",        icon:"🧸", imgSrc:"assorted toys/diy plane.jpg",                          count:5,  color:"linear-gradient(135deg,#FF5252,#D50000)"},
+  {name:"Battery Operated Items",icon:"🔋", imgSrc:"baterry operated items/cute electric dog.jpg",         count:5,  color:"linear-gradient(135deg,#FF9100,#E65100)"},
+  {name:"Box Items",            icon:"📦", imgSrc:"box items/cat piano.jpg",                              count:5,  color:"linear-gradient(135deg,#FFEA00,#FFAB00)"},
+  {name:"Die Cast Toys",        icon:"🚗", imgSrc:"die cast/lamborghini die cast model.jpg",               count:5,  color:"linear-gradient(135deg,#40C4FF,#0091EA)"},
+  {name:"Dolls",               icon:"🪆", imgSrc:"dolls/doll set.jpg",                                   count:5,  color:"linear-gradient(135deg,#FF80AB,#C51162)"},
+  {name:"Guns",                icon:"🎯", imgSrc:"guns copy/AK gel blaster gun.jpg",                     count:5,  color:"linear-gradient(135deg,#69F0AE,#00C853)"},
+  {name:"RC Cars",             icon:"🏎️", imgSrc:"rc cars/Lamborghini drift rc car.jpg",                 count:5,  color:"linear-gradient(135deg,#F44336,#B71C1C)"},
+  {name:"Role Play Toys",      icon:"🎭", imgSrc:"roleplay toys/kitchen set.jpg",                         count:5,  color:"linear-gradient(135deg,#E040FB,#AA00FF)"},
+  {name:"Trains and Track Sets",icon:"🚂", imgSrc:"trains and track sets/big thomas train track set.jpg", count:5,  color:"linear-gradient(135deg,#FF6D00,#BF360C)"}
 ];
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-let currentRoute = window.location.pathname === '/' ? 'home' : window.location.pathname.substring(1);
+// Works on both file:// (local) and http:// (server)
+let currentRoute = (window.location.protocol === 'file:' || window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) ? 'home' : window.location.pathname.substring(1).split('?')[0] || 'home';
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
@@ -853,11 +1037,14 @@ function initRouter() {
 }
 
 function routeTo(path, isPopState = false) {
-  let newRoute = path === '/' ? 'home' : path.substring(1).split('?')[0];
+  let newRoute = (path === '/' || path === '' || path.endsWith('index.html')) ? 'home' : path.substring(1).split('?')[0];
   if(!document.getElementById(`page-${newRoute}`)) newRoute = 'home';
   if(newRoute === currentRoute) return;
 
-  if(!isPopState) window.history.pushState({}, "", path);
+  // pushState throws on file:// URLs — wrap in try/catch
+  if(!isPopState) {
+    try { window.history.pushState({}, '', path); } catch(e) {}
+  }
 
   const currentEl = document.getElementById(`page-${currentRoute}`);
   const newEl = document.getElementById(`page-${newRoute}`);
@@ -868,19 +1055,19 @@ function routeTo(path, isPopState = false) {
   newEl.style.display = 'block';
 
   setTimeout(() => {
-    currentEl.classList.remove('page', 'active', 'page-exit');
-    currentEl.classList.add('page');
+    // Keep 'page' class — only remove 'active' and 'page-exit'
+    currentEl.classList.remove('active', 'page-exit');
     currentEl.style.display = 'none';
     newEl.classList.remove('page-enter');
     newEl.classList.add('active');
     currentRoute = newRoute;
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
     // trigger renders
     if(newRoute === 'shop') renderShop();
     if(newRoute === 'sale') renderSale();
     if(newRoute === 'new-arrivals') renderNewArrivals();
     updateNavUI();
-  }, 600); // match dropOff duration
+  }, 600);
 }
 
 function updateNavUI() {
@@ -913,23 +1100,36 @@ function toggleMobileMenu() {
 }
 
 // Data Rendering
+function encodeURIPath(path) {
+  return path.split('/').map(s => encodeURIComponent(s)).join('/');
+}
+
 function createProductCard(p, delay) {
   const isWish = wishlist.includes(p.id);
   const stars = '⭐'.repeat(Math.floor(p.rating));
+  const imgContent = p.imgPath
+    ? `<img src="${encodeURIPath(p.imgPath)}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:15px;transition:transform 0.4s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onerror="this.parentElement.innerHTML='${p.img}';this.parentElement.style.fontSize='6rem';">`
+    : p.img;
   return `
     <div class="product-card floating" style="animation-delay: ${delay}s">
       ${p.isNew ? '<div class="card-badge badge-new">NEW!</div>' : ''}
       ${p.isSale && !p.isNew ? '<div class="card-badge badge-sale">SALE</div>' : ''}
       <button class="wishlist-btn ${isWish?'active':''}" onclick="toggleWishlist(${p.id}, this)">❤️</button>
-      <div class="card-img" style="background: ${p.color}" id="img-p${p.id}">${p.img}</div>
+      <div class="card-img" style="background:${p.color};overflow:hidden;${p.imgPath ? 'padding:0;' : ''}" id="img-p${p.id}">${imgContent}</div>
       <div class="product-brand">${p.brand}</div>
       <h3 class="product-name">${p.name}</h3>
       <div class="stars">${stars} <span style="color:#aaa;font-size:0.8rem">(${p.reviews})</span></div>
       <div class="price-row">
-        ${p.oldPrice > p.price ? `<span class="price-old">₱${p.oldPrice}</span>` : ''}
-        <span class="price-current">₱${p.price}</span>
+        ${p.oldPrice > p.price ? `<span class="price-old">₹${p.oldPrice}</span>` : ''}
+        <span class="price-current">₹${p.price}</span>
       </div>
-      <button class="btn btn-red add-to-cart" onclick="addToCart(event, ${p.id}, 'img-p${p.id}')">ADD TO CART</button>
+      <div style="display:flex;gap:8px;width:100%;margin-top:auto;">
+        <div style="display:flex;gap:8px;width:100%;margin-top:auto;">
+        <button class="btn btn-red add-to-cart" style="flex:1;font-size:0.9rem;padding:10px 8px;" onclick="addToCart(event, ${p.id}, 'img-p${p.id}')">ADD TO CART</button>
+        <button title="View all images" onclick="openImgViewer(${p.id})" style="background:#1565C0;color:white;border:none;border-radius:30px;padding:10px 14px;cursor:pointer;font-size:1rem;flex-shrink:0;" onmouseover="this.style.background='#0d47a1'" onmouseout="this.style.background='#1565C0'">&#128247;</button>
+      </div>
+        <button title="View all images" onclick="openImgViewer(${p.id})" style="background:var(--navy);color:white;border:none;border-radius:30px;padding:10px 14px;cursor:pointer;font-size:1rem;transition:all 0.2s;flex-shrink:0;" onmouseover="this.style.background='#0d47a1'" onmouseout="this.style.background='var(--navy)'">&#128247;</button>
+      </div>
     </div>
   `;
 }
@@ -938,7 +1138,9 @@ function renderHomeData() {
   const qc = document.getElementById('quick-cats');
   qc.innerHTML = categories.map((c,i) => `
     <div class="cat-btn" onclick="routeTo('/shop?cat=${c.name}')">
-      <div class="cat-icon floating" style="background: ${c.color}; animation-delay: ${i*0.2}s">${c.icon}</div>
+      <div class="cat-icon floating" style="background: ${c.color}; animation-delay: ${i*0.2}s; padding:0; overflow:hidden;">
+        <img src="${encodeURIPath(c.imgSrc)}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentElement.innerHTML='${c.icon}';this.parentElement.style.fontSize='2rem';">
+      </div>
       <span>${c.name}</span>
     </div>
   `).join('');
@@ -950,7 +1152,7 @@ function renderHomeData() {
 function renderShop() {
   const catsBox = Array.from(document.querySelectorAll('#filter-categories input:checked')).map(el=>el.value);
   const maxPrice = document.getElementById('price-slider').value;
-  document.getElementById('price-val').innerText = `₱${maxPrice}`;
+  document.getElementById('price-val').innerText = `₹${maxPrice}`;
   
   let p = products.filter(x => x.price <= maxPrice);
   if(catsBox.length > 0) p = p.filter(x => catsBox.some(c => x.cat.includes(c)));
@@ -982,16 +1184,86 @@ function renderSale() {
 }
 
 function renderCategoriesData() {
-  document.getElementById('cat-grid').innerHTML = categories.map((c,i) => `
-    <div class="big-cat-card floating" style="animation-delay: ${i*0.15}s" onclick="routeTo('/shop')">
-      <div class="big-cat-bg" style="background:${c.color}"></div>
-      <div class="big-cat-content">
-        <h3>${c.name}</h3>
-        <p>${c.count} products</p>
+  document.getElementById('cat-grid').innerHTML = categories.map((c,i) => {
+    const imgs = categoryImages[c.name];
+    if (imgs && imgs.length > 0) {
+      const mosaicImgs = imgs.slice(0,4).map((src,idx) =>
+        `<img src="${encodeURIPath(src)}" alt="${c.name}" style="width:100%;height:${idx===0?'140':'88'}px;object-fit:cover;border-radius:8px;transition:transform 0.3s;" onerror="this.style.display='none';">`
+      ).join('');
+      return `
+        <div class="big-cat-card floating" style="animation-delay:${i*0.15}s;padding:0;overflow:hidden;cursor:pointer;position:relative;min-height:340px;" onclick="showCategoryGallery('${c.name}')">
+          <div class="big-cat-bg" style="background:${c.color};opacity:0.15;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px;position:relative;z-index:2;">${mosaicImgs}</div>
+          <div style="padding:20px 25px 25px;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0) 100%);color:white;z-index:3;">
+            <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;margin-bottom:6px;border:2px solid rgba(255,255,255,0.5);">
+              <img src="${encodeURIPath(c.imgSrc)}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<span style=font-size:1.8rem>${c.icon}</span>';">
+            </div>
+            <h3 style="font-size:1.8rem;margin:0 0 4px;font-family:'Fredoka One';">${c.name}</h3>
+            <p style="margin:0;opacity:0.8;font-size:0.9rem;">${imgs.length} items · Tap to explore ›</p>
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="big-cat-card floating" style="animation-delay:${i*0.15}s" onclick="routeTo('/shop')">
+        <div class="big-cat-bg" style="background:${c.color}"></div>
+        <div class="big-cat-content"><h3>${c.name}</h3><p>${c.count} products</p></div>
+        <div class="big-cat-img" style="width:80px;height:80px;border-radius:50%;overflow:hidden;">
+          <img src="${encodeURIPath(c.imgSrc)}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<span style=font-size:5rem>${c.icon}</span>';">
+        </div>
       </div>
-      <div class="big-cat-img">${c.icon}</div>
+    `;
+  }).join('');
+}
+
+function showCategoryGallery(catName) {
+  const catProducts = products.filter(p => p.cat === catName);
+  const cat = categories.find(c => c.name === catName);
+  const existing = document.getElementById('gallery-overlay');
+  if (existing) existing.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'gallery-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:5000;overflow-y:auto;animation:dropIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);';
+  overlay.innerHTML = `
+    <div style="max-width:1200px;margin:0 auto;padding:30px 20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;flex-wrap:wrap;gap:15px;">
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.4);flex-shrink:0;">
+            <img src="${encodeURIPath(cat ? cat.imgSrc : '')}" alt="${catName}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<span style=font-size:2.5rem>${cat ? cat.icon : '📦'}</span>';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';">
+          </div>
+          <div>
+            <h2 style="color:white;font-family:'Fredoka One';font-size:2.5rem;margin:0;">${catName}</h2>
+            <p style="color:rgba(255,255,255,0.6);margin:0;">${catProducts.length} products</p>
+          </div>
+        </div>
+        <button onclick="document.getElementById('gallery-overlay').remove()" style="background:white;border:none;border-radius:50%;width:48px;height:48px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;">
+        ${catProducts.map(p => `
+          <div style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.3);transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.3)'">
+            <div style="height:210px;overflow:hidden;background:${p.color};display:flex;align-items:center;justify-content:center;">
+              <img src="${encodeURIPath(p.imgPath)}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+            <div style="padding:18px;">
+              ${p.isNew ? '<span style="background:#FFD700;color:#E31E24;font-size:0.75rem;font-weight:bold;padding:3px 10px;border-radius:20px;font-family:Fredoka One;display:inline-block;margin-bottom:6px;">NEW!</span>' : ''}
+              ${p.isSale && !p.isNew ? '<span style="background:#E31E24;color:white;font-size:0.75rem;font-weight:bold;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;">SALE</span>' : ''}
+              <h3 style="font-family:Nunito,sans-serif;font-weight:800;font-size:1rem;color:#1A237E;margin:4px 0;">${p.name}</h3>
+              <div style="color:#888;font-size:0.8rem;margin-bottom:12px;">${p.brand}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div>${p.oldPrice > p.price ? `<span style="text-decoration:line-through;color:#999;font-size:0.85rem;">₹${p.oldPrice}</span> ` : ''}<span style="color:#E31E24;font-weight:bold;font-size:1.25rem;">₹${p.price}</span></div>
+                <button class="btn btn-red" style="padding:8px 16px;font-size:0.85rem;" onclick="processAddToCart(${p.id});this.innerHTML='✓ Added';this.style.background='#388E3C';setTimeout(()=>{this.innerHTML='Add';this.style.background='';},1800)">Add</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="text-align:center;margin-top:40px;padding-bottom:40px;">
+        <button class="btn btn-red" onclick="document.getElementById('gallery-overlay').remove();routeTo('/shop')" style="font-size:1.1rem;padding:15px 40px;">Shop All Products →</button>
+      </div>
     </div>
-  `).join('');
+  `;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
 }
 
 function startSaleTimer() {
@@ -1098,7 +1370,7 @@ function renderCart() {
       <div class="cart-item-img" style="background:${c.color}">${c.img}</div>
       <div class="cart-item-info">
         <h5>${c.name}</h5>
-        <div style="color:var(--red);font-weight:bold;margin-bottom:5px;">₱${c.price}</div>
+        <div style="color:var(--red);font-weight:bold;margin-bottom:5px;">₹${c.price}</div>
         <div class="qty-ctrl">
           <button class="qty-btn" onclick="qtyChange(${c.id}, -1)">-</button>
           <span>${c.qty}</span>
@@ -1109,7 +1381,7 @@ function renderCart() {
     </div>
   `}).join('');
   
-  document.getElementById('cart-subtotal').innerText = `₱${total}`;
+  document.getElementById('cart-subtotal').innerText = `₹${total}`;
   const pb = document.getElementById('cart-progress-bar');
   const pt = document.getElementById('cart-progress-text');
   if(total >= 1500) {
@@ -1117,7 +1389,7 @@ function renderCart() {
     pt.innerHTML = '🎉 You qualify for <strong>FREE SHIPPING!</strong>';
   } else {
     pb.style.width = `${(total/1500)*100}%`;
-    pt.innerHTML = `Add ₱${1500-total} more for free shipping!`;
+    pt.innerHTML = `Add ₹${1500-total} more for free shipping!`;
   }
 }
 
@@ -1214,6 +1486,115 @@ function setupScrollAnimations() {
     observer.observe(el);
   });
 }
+
+
+// ===== PRODUCT IMAGE VIEWER =====
+const productImageMap = {
+  "Assorted Toys":        ["assorted toys/diy plane.jpg","assorted toys/flying gyrosphere.jpg","assorted toys/hand sensor track set.jpg","assorted toys/labubu wristbands.jpg","assorted toys/watch set.jpg"],
+  "Battery Operated Items":["baterry operated items/cute electric dog.jpg","baterry operated items/cute electric elephant.jpg","baterry operated items/dancing monkey.jpg","baterry operated items/dancing penguin.jpg","baterry operated items/smoke train.jpg"],
+  "Box Items":            ["box items/cat piano.jpg","box items/cow piano.jpg","box items/dino piano.jpg","box items/mobile phone toy.jpg","box items/push and go teddies.jpg"],
+  "Die Cast Toys":        ["die cast/apollo die cast model.jpg","die cast/dodge challenger die cast model.jpg","die cast/lamborghini die cast model.jpg","die cast/mclaren die cast model.jpg","die cast/pagani die cast model.jpg"],
+  "Dolls":                ["dolls/doll set with accessories.jpg","dolls/doll set with diaper bag.jpg","dolls/doll set with doll food.jpg","dolls/doll set with doll clothes.jpg","dolls/doll set.jpg"],
+  "Guns":                 ["guns copy/AK gel blaster gun.jpg","guns copy/AUG gel blaster gun.jpg","guns copy/M416 gel blaster gun.jpg","guns copy/MP5 gel blaster gun.jpg","guns copy/battery operated gun box.jpg"],
+  "RC Cars":              ["rc cars/camera rc car.jpg","rc cars/high speed rc car.jpg","rc cars/Lamborghini drift rc car.jpg","rc cars/neon rc car.jpg","rc cars/wall climbing rc car.jpg"],
+  "Role Play Toys":       ["roleplay toys/beauty set.jpg","roleplay toys/doctor set.jpg","roleplay toys/kitchen chef set.jpg","roleplay toys/kitchen set.jpg","roleplay toys/little chef set.jpg"],
+  "Trains and Track Sets":["trains and track sets/big thomas train track set.jpg","trains and track sets/hand sensor track set.jpg","trains and track sets/hand sensor track set..jpg","trains and track sets/hand sensor track set.jpg.jpg","trains and track sets/thomas train track set.jpg"]
+};
+const productDescMap = {
+  "diy plane.jpg":"Creative DIY assembly plane kit — develop motor skills while building!", 
+  "flying gyrosphere.jpg":"Futuristic gyro-powered flying sphere — indoor & outdoor fun!",
+  "hand sensor track set.jpg":"Hand-sensor controlled track set — wave your hand to operate!",
+  "labubu wristbands.jpg":"Trendy Labubu character wristbands — perfect collectible gift!",
+  "watch set.jpg":"Fun toy watch set — teaches kids to read time in style!",
+  "cute electric dog.jpg":"Adorable battery-operated electric dog that walks and barks!",
+  "cute electric elephant.jpg":"Cute dancing electric elephant with music and lights!",
+  "dancing monkey.jpg":"Hilarious dancing monkey — claps, flips and plays music!",
+  "dancing penguin.jpg":"Charming battery-operated dancing penguin with LED glow!",
+  "smoke train.jpg":"Realistic smoke-emitting battery train with engine sounds!",
+  "cat piano.jpg":"Cute cat-shaped piano keyboard with fun animal sounds!",
+  "cow piano.jpg":"Cheerful cow piano toy with nursery rhymes — great for toddlers!",
+  "dino piano.jpg":"Roarsome dinosaur piano with colourful keys and dino sounds!",
+  "mobile phone toy.jpg":"Interactive toy phone with games, music and stories!",
+  "push and go teddies.jpg":"Adorable push-and-go plush teddies — self-propelled fun!",
+  "apollo die cast model.jpg":"Premium die-cast Apollo spacecraft model — collector's item!",
+  "dodge challenger die cast model.jpg":"High-detail Dodge Challenger die-cast — 1:36 scale replica!",
+  "lamborghini die cast model.jpg":"Sleek Lamborghini die-cast model — every kid's dream car!",
+  "mclaren die cast model.jpg":"Precision McLaren die-cast — durable metal construction!",
+  "pagani die cast model.jpg":"Exotic Pagani Huayra die-cast — ultra-detailed body!",
+  "doll set with accessories.jpg":"Complete doll set bundled with stylish accessories!",
+  "doll set with diaper bag.jpg":"Baby doll role-play set with realistic diaper bag!",
+  "doll set with doll food.jpg":"Fun feeding play set — doll with realistic food accessories!",
+  "doll set with doll clothes.jpg":"Fashion doll with extra outfit set for style play!",
+  "doll set.jpg":"Classic doll set — perfect first doll for young girls!",
+  "AK gel blaster gun.jpg":"AK-style gel blaster — safe water-bead ammo, huge fun!",
+  "AUG gel blaster gun.jpg":"AUG tactical gel blaster — lightweight and easy to use!",
+  "M416 gel blaster gun.jpg":"M416 battle gel blaster — semi-auto fire, safe & fun!",
+  "MP5 gel blaster gun.jpg":"Compact MP5 gel blaster — great for backyard battles!",
+  "battery operated gun box.jpg":"Battery-operated toy gun gift box — ready-to-play set!",
+  "camera rc car.jpg":"RC car with built-in camera — drive and record!",
+  "high speed rc car.jpg":"High-speed RC stunt car — up to 30 km/h!",
+  "Lamborghini drift rc car.jpg":"Drift-mode Lamborghini RC — 360° spins and stunts!",
+  "neon rc car.jpg":"Neon-glow LED RC car — lights up the night!",
+  "wall climbing rc car.jpg":"Gravity-defying wall-climbing RC car — sticks to any surface!",
+  "beauty set.jpg":"Mini beauty & makeup role-play set for creative kids!",
+  "doctor set.jpg":"Doctor role-play kit — stethoscope, syringe & more!",
+  "kitchen chef set.jpg":"Junior chef kitchen role-play set with 20+ accessories!",
+  "kitchen set.jpg":"Full toy kitchen set with pots, pans and food!",
+  "little chef set.jpg":"Little chef cooking play set — realistic kitchen experience!",
+  "big thomas train track set.jpg":"Classic Big Thomas wooden train track set — 40+ pieces!",
+  "thomas train track set.jpg":"Thomas & Friends track set with tunnels and bridges!"
+};
+
+let ivProducts = [], ivCur = 0, ivProd = null;
+
+function openImgViewer(productId) {
+  ivProd = products.find(p => p.id === productId);
+  if (!ivProd) return;
+  const catImages = productImageMap[ivProd.cat] || [];
+  // use product's own image first, then other category images
+  const own = ivProd.imgPath ? [ivProd.imgPath] : [];
+  const others = catImages.filter(img => !own.includes(img));
+  ivProducts = [...own, ...others];
+  ivCur = 0;
+  document.getElementById('iv-name').textContent = ivProd.name;
+  document.getElementById('iv-brand').textContent = ivProd.brand + ' · ' + ivProd.cat;
+  document.getElementById('iv-price').textContent = '₹' + ivProd.price;
+  document.getElementById('iv-oldprice').textContent = ivProd.oldPrice > ivProd.price ? '₹' + ivProd.oldPrice : '';
+  ivRender();
+  const overlay = document.getElementById('img-viewer-overlay');
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeImgViewer(e) {
+  if (e && e.target !== document.getElementById('img-viewer-overlay')) return;
+  if (!e) { document.getElementById('img-viewer-overlay').style.display = 'none'; document.body.style.overflow = ''; }
+  else     { document.getElementById('img-viewer-overlay').style.display = 'none'; document.body.style.overflow = ''; }
+}
+function ivRender() {
+  const img = document.getElementById('iv-main-img');
+  img.style.opacity = '0';
+  setTimeout(() => {
+    img.src = encodeURIPath(ivProducts[ivCur]);
+    img.alt = ivProducts[ivCur].split('/').pop().replace(/\.jpg$/i,'');
+    img.style.opacity = '1';
+  }, 150);
+  const fname = ivProducts[ivCur].split('/').pop();
+  document.getElementById('iv-desc').textContent = productDescMap[fname] || ('Category: ' + (ivProd ? ivProd.cat : ''));
+  document.getElementById('iv-counter').textContent = 'Image ' + (ivCur + 1) + ' of ' + ivProducts.length;
+  const thumbEl = document.getElementById('iv-thumbs');
+  thumbEl.innerHTML = ivProducts.map((src, i) =>
+    `<img onclick="ivGoTo(${i})" src="${encodeURIPath(src)}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer;border:2.5px solid ${i===ivCur?'var(--red)':'rgba(255,255,255,0.15)'};opacity:${i===ivCur?'1':'0.55'};transition:all 0.2s;flex-shrink:0;" onerror="this.style.display='none'">`
+  ).join('');
+}
+function ivNav(d) { ivCur = (ivCur + d + ivProducts.length) % ivProducts.length; ivRender(); }
+function ivGoTo(n) { ivCur = n; ivRender(); }
+document.addEventListener('keydown', e => {
+  const v = document.getElementById('img-viewer-overlay');
+  if (v.style.display === 'none') return;
+  if (e.key === 'ArrowLeft')  ivNav(-1);
+  if (e.key === 'ArrowRight') ivNav(1);
+  if (e.key === 'Escape')     closeImgViewer();
+});
 
 </script>
 </html>
