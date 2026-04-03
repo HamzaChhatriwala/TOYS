@@ -324,6 +324,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyAt5llrTbuX0OLn-CosKFG8WYBgCOi6A_s",
@@ -338,7 +339,10 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
-      window.firebaseApp = app; 
+      window.firebaseApp = app;
+      window.firebaseAuth = getAuth(app);
+      window.firebaseAuthCreateUser = createUserWithEmailAndPassword;
+      window.firebaseAuthSignIn = signInWithEmailAndPassword; 
     </script>
 </head>
 <body>
@@ -388,7 +392,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       </div>
       <div class="header-actions">
         <div class="action-icon" title="Account" onclick="routeTo('/login')" style="cursor:pointer;">👤</div>
-        <div class="action-icon" title="Wishlist" onclick="alert('❤️ You have ' + wishlist.length + ' item(s) in your wishlist! Wishlist viewing page is coming soon.')" style="cursor:pointer;">❤️<span class="badge" id="wish-badge">0</span></div>
+        <div class="action-icon" title="Wishlist" onclick="routeTo('/wishlist')" style="cursor:pointer;">❤️<span class="badge" id="wish-badge">0</span></div>
         <div class="action-icon" onclick="toggleCart()" id="cart-icon" title="Cart">🛒<span class="badge" id="cart-badge">0</span></div>
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
       </div>
@@ -964,7 +968,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
             <div style="flex:1;border-top:2px solid #f0f0f0;"></div>
           </div>
           <!-- Create Account -->
-          <button onclick="alert('Account Registration is temporarily unavailable while we upgrade our systems. Please continue as a Guest!');" class="btn" style="width:100%;background:var(--yellow);color:var(--red);border-radius:9999px;font-size:1.15rem;box-shadow:0 6px 0 #d4a00a;padding:16px;">
+          <button type="button" onclick="routeTo('/register')" class="btn" style="width:100%;background:var(--yellow);color:var(--red);border-radius:9999px;font-size:1.15rem;box-shadow:0 6px 0 #d4a00a;padding:16px;">
             Create Account
           </button>
           <p style="text-align:center;margin-top:20px;font-size:0.85rem;font-weight:700;color:rgba(26,35,126,0.35);">
@@ -973,6 +977,52 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
         </div>
       </div>
     </div>
+
+    <!-- ===== REGISTER PAGE ===== -->
+    <section id="page-register" class="page" style="display:none;min-height:90vh;display:flex;align-items:center;justify-content:center;padding:120px 20px 80px;background:linear-gradient(135deg,#fdfbfb 0%,#ebedee 100%);">
+      <div style="background:white;border-radius:2rem;box-shadow:0 20px 50px rgba(26,35,126,0.1);padding:40px;width:100%;max-width:420px;border-bottom:8px solid rgba(227,30,36,0.08);position:relative;z-index:2;">
+        <div style="text-align:center;margin-bottom:25px;">
+          <h1 style="font-family:'Fredoka One';font-size:2rem;color:var(--navy);">Create Account</h1>
+          <p style="color:#666;font-weight:700;margin-top:5px;">Join the Toy Kingdom family!</p>
+        </div>
+        <form id="register-form" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label style="font-family:'Fredoka One';font-size:0.9rem;color:var(--navy);padding-left:5px;">Full Name</label>
+            <input type="text" id="reg-name" class="form-control" placeholder="John Doe" style="border-radius:2rem;background:#f5f7fa;border:2px solid transparent;" required>
+          </div>
+          <div class="form-group">
+            <label style="font-family:'Fredoka One';font-size:0.9rem;color:var(--navy);padding-left:5px;">Email Address</label>
+            <input type="email" id="reg-email" class="form-control" placeholder="sparky@magic.com" style="border-radius:2rem;background:#f5f7fa;border:2px solid transparent;" required>
+          </div>
+          <div class="form-group">
+            <label style="font-family:'Fredoka One';font-size:0.9rem;color:var(--navy);padding-left:5px;">Password</label>
+            <input type="password" id="reg-password" class="form-control" placeholder="••••••••" style="border-radius:2rem;background:#f5f7fa;border:2px solid transparent;" required minlength="6">
+          </div>
+          <button type="submit" class="btn" style="width:100%;font-size:1.15rem;border-radius:9999px;background:var(--green);color:white;box-shadow:0 6px 0 #2e7d32;padding:16px;">
+            Sign Up ✨
+          </button>
+        </form>
+        <p style="text-align:center;margin-top:20px;font-size:0.85rem;font-weight:700;">
+          Already have an account? <a href="#" onclick="event.preventDefault();routeTo('/login')" style="color:var(--blue);">Log In</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== WISHLIST PAGE ===== -->
+    <section id="page-wishlist" class="page" style="display:none;padding:120px 2% 60px;">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:30px;border-bottom:3px solid #eee;padding-bottom:15px;">
+          <div>
+            <h2 class="section-title" style="margin:0;">My Wishlist ❤️</h2>
+            <p style="color:#666;font-size:1.1rem;margin:5px 0 0;" id="wishlist-count-desc">0 items saved</p>
+          </div>
+          <button class="btn" style="background:#f5f5f5;color:var(--red);border-radius:20px;font-size:0.9rem;" onclick="clearWishlist()">Clear All</button>
+        </div>
+        <div class="product-grid" id="wishlist-grid" style="min-height:40vh;">
+          <!-- Items render here -->
+        </div>
+      </div>
+    </section>
 
   </main>
 
@@ -1499,6 +1549,7 @@ function routeTo(path, isPopState = false) {
     if(newRoute === 'shop') renderShop();
     if(newRoute === 'sale') renderSale();
     if(newRoute === 'new-arrivals') renderNewArrivals();
+    if(newRoute === 'wishlist') renderWishlist();
     updateNavUI();
   }, 600);
 }
@@ -1514,17 +1565,77 @@ function handleLogin(event) {
   event.preventDefault();
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
-  if (email && password) {
-    // Simulate login — show success and redirect to home
-    const btn = event.target.querySelector('button[type="submit"]');
-    btn.innerHTML = '✅ Logging in...';
-    btn.disabled = true;
-    setTimeout(() => {
-      document.getElementById('login-form').reset();
-      btn.innerHTML = 'Login 🚀';
-      btn.disabled = false;
-      routeTo('/');
-    }, 1000);
+  if (!email || !password) return;
+  const btn = event.target.querySelector('button[type="submit"]');
+  btn.innerHTML = '✅ Logging in...'; btn.disabled = true;
+
+  if (window.firebaseAuthSignIn) {
+    window.firebaseAuthSignIn(window.firebaseAuth, email, password)
+      .then((userCredential) => {
+        alert("Welcome back!");
+        document.getElementById('login-form').reset();
+        routeTo('/');
+      })
+      .catch((error) => {
+        alert("Login failed: " + error.message + "\n(Tip: use Create Account if you don't have one)");
+      })
+      .finally(() => {
+        btn.innerHTML = 'Login 🚀'; btn.disabled = false;
+      });
+  } else {
+    setTimeout(() => { btn.innerHTML = 'Login 🚀'; btn.disabled = false; routeTo('/'); }, 1000);
+  }
+}
+
+function handleRegister(event) {
+  event.preventDefault();
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  if (!email || !password) return;
+
+  const btn = event.target.querySelector('button[type="submit"]');
+  btn.innerHTML = 'Creating...'; btn.disabled = true;
+
+  if (window.firebaseAuthCreateUser) {
+    window.firebaseAuthCreateUser(window.firebaseAuth, email, password)
+      .then((userCredential) => {
+        alert("Account created successfully! Welcome " + name);
+        document.getElementById('register-form').reset();
+        routeTo('/');
+      })
+      .catch((error) => {
+        alert("Error: " + error.message + "\n(Did you enable Authentication in Firebase?)");
+      })
+      .finally(() => {
+        btn.innerHTML = 'Sign Up ✨'; btn.disabled = false;
+      });
+  } else {
+    alert("Firebase Auth SDK not ready yet!");
+    btn.innerHTML = 'Sign Up ✨'; btn.disabled = false;
+  }
+}
+
+function renderWishlist() {
+  const grid = document.getElementById('wishlist-grid');
+  const countDesc = document.getElementById('wishlist-count-desc');
+  countDesc.innerText = `${wishlist.length} item(s) saved`;
+  
+  if(wishlist.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:#999;font-size:1.2rem;">Your wishlist is empty! 💔<br><br><button class="btn btn-red" onclick="routeTo(\'/shop\')" style="margin-top:20px;font-size:1rem;">Explore Toys</button></div>';
+    return;
+  }
+  
+  const wItems = products.filter(p => wishlist.includes(p.id));
+  grid.innerHTML = wItems.map((pr,i) => createProductCard(pr, i*0.1)).join('');
+}
+
+function clearWishlist() {
+  if(confirm("Empty your entire wishlist?")) {
+    wishlist = [];
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    updateBadges();
+    renderWishlist();
   }
 }
 
