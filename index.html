@@ -1189,16 +1189,47 @@ Answer helpfully in 2-4 short sentences. Use ₹ for prices. Be warm, friendly a
       reply = fallback(msg);
     }
     appendMsg(reply, 'bot');
-    // Show WhatsApp button for complex queries
-    if(reply.includes('9167777040')) {
-      const box = document.getElementById('tk-chat-messages');
+
+    // ── Smart navigation buttons ────────────────────────────────────
+    const msgLow = msg.toLowerCase();
+    const repLow = reply.toLowerCase();
+    const chatBox = document.getElementById('tk-chat-messages');
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 6px 0;';
+
+    const navBtn = (label, icon, color, action) => {
+      const b = document.createElement('button');
+      b.innerHTML = icon + ' ' + label;
+      b.style.cssText = 'background:'+color+';color:white;border:none;padding:7px 14px;border-radius:9999px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:Fredoka One,sans-serif;';
+      b.onmouseover = () => b.style.opacity = '0.85';
+      b.onmouseout  = () => b.style.opacity = '1';
+      b.onclick = action;
+      return b;
+    };
+
+    if (/sale|discount|offer|deal|% off/i.test(msgLow + ' ' + repLow)) {
+      btnRow.appendChild(navBtn('View Sale', '🔥', '#E31E24', () => { window.tkChatToggle(); if(window.routeTo) routeTo('/sale'); }));
+    }
+    if (/shop|buy|purchas|product|browse|all item|our toy/i.test(msgLow + ' ' + repLow)) {
+      btnRow.appendChild(navBtn('Go to Shop', '🛒', '#1565C0', () => { window.tkChatToggle(); if(window.routeTo) routeTo('/shop'); }));
+    }
+    if (/categor|type of toy|collection|section/i.test(msgLow + ' ' + repLow)) {
+      btnRow.appendChild(navBtn('All Categories', '🧸', '#FF8F00', () => { window.tkChatToggle(); if(window.routeTo) routeTo('/categories'); }));
+    }
+    if (/new arrival|new toy|latest|just in|fresh/i.test(msgLow + ' ' + repLow)) {
+      btnRow.appendChild(navBtn('New Arrivals', '✨', '#7B1FA2', () => { window.tkChatToggle(); if(window.routeTo) routeTo('/new-arrivals'); }));
+    }
+    if (/9167777040|whatsapp|contact|call|reach|bulk|order/i.test(repLow)) {
       const wa = document.createElement('a');
       wa.href = 'https://wa.me/919167777040?text=Hi Toy Kingdom! I have a query.';
       wa.target = '_blank';
-      wa.style.cssText = 'background:#25D366;color:white;border:none;padding:8px 16px;border-radius:9999px;font-size:0.8rem;font-weight:700;text-decoration:none;display:inline-block;margin:4px 0 0 0;';
-      wa.textContent = '💬 Chat on WhatsApp';
-      box.appendChild(wa);
-      box.scrollTop = box.scrollHeight;
+      wa.style.cssText = 'background:#25D366;color:white;padding:7px 14px;border-radius:9999px;font-size:0.75rem;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:4px;';
+      wa.innerHTML = '💬 WhatsApp Us';
+      btnRow.appendChild(wa);
+    }
+    if (btnRow.children.length > 0) {
+      chatBox.appendChild(btnRow);
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
   };
 
