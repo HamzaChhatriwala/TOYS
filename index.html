@@ -1001,6 +1001,248 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       &copy; 2025 Toy Kingdom — The Amazing Toy Store | Privacy Policy | Terms of Service
     </div>
   </footer>
+
+<!-- ===== TOY KINGDOM AI CHATBOT ===== -->
+<style>
+  #tk-chat-fab{position:fixed;bottom:28px;right:28px;z-index:8999;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--red),#b71c1c);color:white;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(227,30,36,0.45);display:flex;align-items:center;justify-content:center;font-size:1.8rem;transition:all 0.3s;animation:botPulse 2.5s infinite;}
+  #tk-chat-fab:hover{transform:scale(1.12);box-shadow:0 10px 35px rgba(227,30,36,0.6);}
+  @keyframes botPulse{0%,100%{box-shadow:0 6px 24px rgba(227,30,36,0.45);}50%{box-shadow:0 6px 36px rgba(227,30,36,0.75),0 0 0 8px rgba(227,30,36,0.12);}}
+  #tk-chat-bubble{position:fixed;bottom:102px;right:28px;background:white;color:#333;font-family:'Nunito',sans-serif;font-size:0.82rem;padding:9px 14px;border-radius:14px 14px 4px 14px;box-shadow:0 4px 18px rgba(0,0,0,0.12);z-index:8998;white-space:nowrap;animation:fadeSlideIn 0.5s ease;font-weight:700;}
+  #tk-chat-bubble::after{content:'';position:absolute;bottom:-8px;right:14px;border:8px solid transparent;border-top-color:white;border-bottom:0;margin-left:-8px;}
+  #tk-chatbox{position:fixed;bottom:28px;right:28px;z-index:9000;width:370px;height:570px;border-radius:24px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,0.22);animation:chatSlide 0.4s cubic-bezier(0.175,0.885,0.32,1.275);}
+  @keyframes chatSlide{from{opacity:0;transform:translateY(40px) scale(0.9);}to{opacity:1;transform:translateY(0) scale(1);}}
+  @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  #tk-chat-header{background:linear-gradient(135deg,#E31E24,#b71c1c);padding:16px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+  #tk-chat-avatar{width:42px;height:42px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+  #tk-chat-title{flex:1;color:white;font-family:'Fredoka One';font-size:1.05rem;}
+  #tk-chat-subtitle{color:rgba(255,255,255,0.75);font-size:0.72rem;font-family:'Nunito';}
+  #tk-chat-close{background:rgba(255,255,255,0.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+  #tk-chat-messages{flex:1;overflow-y:auto;padding:14px;background:#f6f8fc;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;}
+  .tk-msg{max-width:82%;padding:10px 14px;border-radius:18px;font-size:0.87rem;line-height:1.55;word-break:break-word;animation:msgPop 0.25s ease;}
+  @keyframes msgPop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .tk-msg-bot{background:white;color:#333;border-radius:18px 18px 18px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.08);align-self:flex-start;}
+  .tk-msg-user{background:linear-gradient(135deg,#E31E24,#b71c1c);color:white;border-radius:18px 18px 4px 18px;align-self:flex-end;}
+  .tk-msg-time{font-size:0.65rem;opacity:0.5;margin-top:3px;text-align:right;}
+  .tk-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:white;border-radius:18px 18px 18px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.08);align-self:flex-start;width:fit-content;}
+  .tk-typing span{width:7px;height:7px;background:#aaa;border-radius:50%;animation:typingDot 1.2s infinite;}
+  .tk-typing span:nth-child(2){animation-delay:0.2s;}
+  .tk-typing span:nth-child(3){animation-delay:0.4s;}
+  @keyframes typingDot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+  #tk-chat-chips{padding:8px 12px;background:#f6f8fc;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;border-top:1px solid #eee;}
+  .tk-chip{background:white;border:1.5px solid var(--red);color:var(--red);font-size:0.72rem;padding:5px 11px;border-radius:9999px;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-weight:700;}
+  .tk-chip:hover{background:var(--red);color:white;}
+  #tk-chat-input-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:white;border-top:1px solid #eee;flex-shrink:0;}
+  #tk-chat-input{flex:1;border:1.5px solid #e0e4ea;border-radius:9999px;padding:9px 16px;font-family:'Nunito';font-size:0.87rem;outline:none;transition:border 0.2s;}
+  #tk-chat-input:focus{border-color:var(--red);}
+  #tk-chat-send{background:var(--red);color:white;border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all 0.2s;flex-shrink:0;}
+  #tk-chat-send:hover{transform:scale(1.1);background:#b71c1c;}
+  #tk-chat-key-banner{background:#fff8e1;border-top:1px solid #ffe082;padding:8px 14px;font-size:0.72rem;color:#795548;display:flex;align-items:center;gap:6px;flex-shrink:0;}
+</style>
+
+<!-- Floating FAB -->
+<div id="tk-chat-bubble">👋 Hi! How can I help?</div>
+<button id="tk-chat-fab" onclick="tkChatToggle()" title="Chat with TK Bot">🤖</button>
+
+<!-- Chatbox -->
+<div id="tk-chatbox" style="display:none;flex-direction:column;">
+  <div id="tk-chat-header">
+    <div id="tk-chat-avatar">🤖</div>
+    <div>
+      <div id="tk-chat-title">TK Assistant</div>
+      <div id="tk-chat-subtitle">🟢 Online · Toy Kingdom AI</div>
+    </div>
+    <button id="tk-chat-close" onclick="tkChatToggle()">✕</button>
+  </div>
+  <div id="tk-chat-messages"></div>
+  <div id="tk-chat-chips">
+    <button class="tk-chip" onclick="tkSend('What toys do you have?')">🧸 Products</button>
+    <button class="tk-chip" onclick="tkSend('What are your prices?')">💰 Prices</button>
+    <button class="tk-chip" onclick="tkSend('Do you deliver in Mumbai?')">🚚 Delivery</button>
+    <button class="tk-chip" onclick="tkSend('Where is your store?')">📍 Location</button>
+    <button class="tk-chip" onclick="tkSend('I want to place a bulk order')">📦 Bulk Order</button>
+  </div>
+  <div id="tk-chat-key-banner" id="tk-key-banner" style="display:none;">
+    ⚠️ Add your Gemini API key in the <code>GEMINI_KEY</code> constant for AI answers.
+  </div>
+  <div id="tk-chat-input-row">
+    <input id="tk-chat-input" type="text" placeholder="Ask me anything about toys..." onkeydown="if(event.key==='Enter')tkSend()">
+    <button id="tk-chat-send" onclick="tkSend()">➤</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ── CONFIG ─────────────────────────────────────────────────────
+  const GEMINI_KEY = 'YOUR_GEMINI_API_KEY'; // paste your key from ai.google.dev
+  const USE_GEMINI = GEMINI_KEY !== 'YOUR_GEMINI_API_KEY';
+
+  const SYSTEM_PROMPT = `You are TK Assistant, a friendly and knowledgeable AI chatbot for Toy Kingdom — The Amazing Toy Store, a wholesale toy store based at Nagdevi Street, Mumbai, India.
+
+Store info:
+- Founded: 2020
+- Phone: +91 9167777040
+- Email: info@toykingdom.in
+- Location: Nagdevi Street, Mumbai (near Mohammad Ali Road)
+- Serves: Pan-India retailers, bulk buyers, event planners
+- Delivery: Same-day in Mumbai, 3-7 days Pan-India, free shipping above ₹1500
+
+Categories & products (with prices in INR):
+1. Assorted Toys: DIY Plane, Flying Gyrosphere, Hand Sensor Track Set, Labubu Wristbands, Watch Set — ₹299–₹799
+2. Battery Operated Items: Cute Electric Dog, Cute Electric Elephant, Dancing Monkey, Dancing Penguin, Smoke Train — ₹349–₹799
+3. Box Items: Cat Piano, Cow Piano, Dino Piano, Mobile Phone Toy, Push and Go Teddies — ₹249–₹599
+4. Die Cast Toys: Apollo, Dodge Challenger, Lamborghini, McLaren, Pagani models — ₹199–₹499
+5. Dolls: Doll Sets with accessories, clothes, food, diaper bag — ₹399–₹899
+6. Guns: AK, AUG, M416, MP5 Gel Blaster Guns, Battery Operated Gun Box — ₹299–₹649
+7. RC Cars: Camera RC Car, High Speed, Lamborghini Drift, Neon Drift, Wall Climbing — ₹749–₹1499
+8. Role Play Toys: Beauty Set, Doctor Set, Kitchen Chef Set, Kitchen Set, Little Chef Set — ₹349–₹999
+9. Trains and Track Sets: Big Thomas, Hand Sensor Track Sets, Thomas Train Track Set — ₹449–₹1099
+
+Answer helpfully in 2-4 short sentences. Use ₹ for prices. Be warm, friendly and helpful. If asked about ordering, direct to WhatsApp at +91 9167777040. Do not make up products not in the list.`;
+
+  // ── STATE ──────────────────────────────────────────────────────
+  let history = [];
+  let isOpen = false;
+  let bubbleHidden = false;
+
+  // ── FALLBACK RESPONSES ─────────────────────────────────────────
+  const fallback = (q) => {
+    q = q.toLowerCase();
+    if(/hello|hi |hey|namaste/.test(q)) return "👋 Namaste! Welcome to Toy Kingdom — The Amazing Toy Store! I'm TK Assistant. How can I help you today?";
+    if(/rc car|remote car|radio car/.test(q)) return "🏎️ Our RC Cars range from ₹749 to ₹1,499! We have Camera RC Cars, High Speed Drift, Lamborghini Drift, Neon Glow, and Wall Climbing RC Cars. All great for ages 6+!";
+    if(/gun|blaster|gel/.test(q)) return "🎯 We have Gel Blaster Guns starting at ₹299 — AK, AUG, M416, and MP5 models. These use safe water-bead ammo and are super popular!";
+    if(/doll|barbie/.test(q)) return "🪆 Our Dolls range from ₹399–₹899 and include complete sets with accessories, clothes, food or a diaper bag. Perfect gifts for kids!";
+    if(/train|track/.test(q)) return "🚂 Train & Track Sets from ₹449–₹1,099! Big Thomas, Hand Sensor Track Sets, and the classic Thomas Train Track Set — all great for ages 3-8.";
+    if(/die cast|diecast|metal car|model car/.test(q)) return "🚗 Die Cast metal model cars from ₹199–₹499! We have Apollo, Dodge Challenger, Lamborghini, McLaren and Pagani Huayra models in 1:36 scale.";
+    if(/piano|keyboard|music/.test(q)) return "🎹 Box Items like Cat Piano, Cow Piano and Dino Piano are priced ₹249–₹599. Great for toddlers to develop musical sense!";
+    if(/roleplay|role play|kitchen|doctor|chef|beauty/.test(q)) return "👩‍⚕️ Role Play Toys (₹349–₹999) include Doctor Sets, Kitchen Sets, Chef Sets and Beauty Sets — perfect for creative play and imagination!";
+    if(/battery|electric|dancing/.test(q)) return "🔋 Battery Operated Toys (₹349–₹799) include a Dancing Monkey, Dancing Penguin, Cute Electric Dog, Elephant, and a realistic Smoke Train!";
+    if(/price|cost|rate|how much/.test(q)) return "💰 Our prices range from ₹199 (die-cast cars) to ₹1,499 (RC cars). We offer wholesale rates for bulk orders! Free shipping on orders above ₹1,500.";
+    if(/deliver|shipping|ship/.test(q)) return "🚚 Same-day delivery across Mumbai! Pan-India delivery in 3-7 business days. Free shipping on orders above ₹1,500.";
+    if(/location|address|where|store|shop/.test(q)) return "📍 We're located at Nagdevi Street, Mumbai (near Mohammad Ali Road). One of Mumbai's biggest toy wholesale hubs! Call us at +91 9167777040.";
+    if(/bulk|wholesale|order/.test(q)) return "📦 Yes! We specialize in bulk wholesale orders for retailers, schools & events. Contact us on WhatsApp at +91 9167777040 or email info@toykingdom.in for special pricing!";
+    if(/contact|phone|whatsapp|email/.test(q)) return "📞 Reach us at +91 9167777040 (WhatsApp/Call) or email info@toykingdom.in. We're open 7 days a week!";
+    if(/return|refund|exchange/.test(q)) return "🔄 We have a 30-day return policy for unopened items. For exchange or refund issues, contact us on WhatsApp at +91 9167777040.";
+    if(/category|categor|type/.test(q)) return "🧸 We have 9 categories: Assorted Toys, Battery Operated, Box Items, Die Cast, Dolls, Guns, RC Cars, Role Play Toys & Trains! Tap any to explore.";
+    if(/thank/.test(q)) return "🙏 You're welcome! Feel free to ask anything else. Happy shopping at Toy Kingdom!";
+    return "🤔 Great question! For the most accurate answer, please contact us directly on WhatsApp at +91 9167777040 or email info@toykingdom.in. We're always happy to help! 😊";
+  };
+
+  // ── DOM HELPERS ────────────────────────────────────────────────
+  function now() {
+    return new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  }
+  function appendMsg(text, role) {
+    const box = document.getElementById('tk-chat-messages');
+    const div = document.createElement('div');
+    div.className = 'tk-msg tk-msg-' + role;
+    div.innerHTML = text.replace(/\n/g,'<br>') + `<div class="tk-msg-time">${now()}</div>`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+  }
+  function showTyping() {
+    const box = document.getElementById('tk-chat-messages');
+    const el = document.createElement('div');
+    el.className = 'tk-typing'; el.id = 'tk-typing-ind';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+  }
+  function hideTyping() {
+    const el = document.getElementById('tk-typing-ind');
+    if(el) el.remove();
+  }
+
+  // ── GEMINI API CALL ────────────────────────────────────────────
+  async function askGemini(userMsg) {
+    history.push({role:'user', parts:[{text: userMsg}]});
+    const body = {
+      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: history,
+      generationConfig: { maxOutputTokens: 256, temperature: 0.7 }
+    };
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+      { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }
+    );
+    const data = await res.json();
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || fallback(userMsg);
+    history.push({role:'model', parts:[{text: reply}]});
+    return reply;
+  }
+
+  // ── SEND MESSAGE ───────────────────────────────────────────────
+  window.tkSend = async function(text) {
+    const input = document.getElementById('tk-chat-input');
+    const msg = (text || input.value).trim();
+    if(!msg) return;
+    input.value = '';
+    appendMsg(msg, 'user');
+    showTyping();
+    await new Promise(r => setTimeout(r, 700 + Math.random()*600)); // realistic delay
+    hideTyping();
+    let reply;
+    if(USE_GEMINI) {
+      try { reply = await askGemini(msg); }
+      catch(e) { reply = fallback(msg); }
+    } else {
+      reply = fallback(msg);
+    }
+    appendMsg(reply, 'bot');
+    // Show WhatsApp button for complex queries
+    if(reply.includes('9167777040')) {
+      const box = document.getElementById('tk-chat-messages');
+      const wa = document.createElement('a');
+      wa.href = 'https://wa.me/919167777040?text=Hi Toy Kingdom! I have a query.';
+      wa.target = '_blank';
+      wa.style.cssText = 'background:#25D366;color:white;border:none;padding:8px 16px;border-radius:9999px;font-size:0.8rem;font-weight:700;text-decoration:none;display:inline-block;margin:4px 0 0 0;';
+      wa.textContent = '💬 Chat on WhatsApp';
+      box.appendChild(wa);
+      box.scrollTop = box.scrollHeight;
+    }
+  };
+
+  // ── TOGGLE ─────────────────────────────────────────────────────
+  window.tkChatToggle = function() {
+    isOpen = !isOpen;
+    const box = document.getElementById('tk-chatbox');
+    const fab = document.getElementById('tk-chat-fab');
+    const bubble = document.getElementById('tk-chat-bubble');
+    if(isOpen) {
+      box.style.display = 'flex';
+      fab.style.display = 'none';
+      bubble.style.display = 'none';
+      bubbleHidden = true;
+      if(!document.querySelector('.tk-msg')) {
+        setTimeout(() => {
+          appendMsg("👋 Namaste! I'm <strong>TK Assistant</strong>, your AI guide at Toy Kingdom — The Amazing Toy Store! 🧸<br><br>I can help you with products, prices, delivery, or bulk orders. What would you like to know?", 'bot');
+          if(!USE_GEMINI) {
+            const box2 = document.getElementById('tk-chat-messages');
+            const note = document.createElement('div');
+            note.style.cssText = 'font-size:0.7rem;color:#999;text-align:center;padding:4px 0;';
+            note.innerHTML = '⚡ Smart responses active · <a href="https://ai.google.dev" target="_blank" style="color:var(--red);">Upgrade to Gemini AI</a>';
+            box2.appendChild(note);
+          }
+        }, 400);
+      }
+    } else {
+      box.style.display = 'none';
+      fab.style.display = 'flex';
+    }
+  };
+
+  // Hide bubble after 5s
+  setTimeout(() => {
+    const b = document.getElementById('tk-chat-bubble');
+    if(b && !isOpen) { b.style.opacity='0'; b.style.transition='opacity 0.5s'; setTimeout(()=>b.style.display='none',500); }
+  }, 5000);
+
+  // Show API key banner if no key
+  if(!USE_GEMINI) {
+    document.getElementById('tk-chat-key-banner').style.display = 'flex';
+  }
+})();
+</script>
 </body>
 
 <script>
