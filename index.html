@@ -320,6 +320,26 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
 }
 
     </style>
+    <!-- Firebase SDK Setup -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAt5llrTbuX0OLn-CosKFG8WYBgCOi6A_s",
+        authDomain: "toykingdom-db662.firebaseapp.com",
+        projectId: "toykingdom-db662",
+        storageBucket: "toykingdom-db662.firebasestorage.app",
+        messagingSenderId: "921540663590",
+        appId: "1:921540663590:web:4441d1b4ad3ea3130149e7",
+        measurementId: "G-XGTJM0N3DJ"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      window.firebaseApp = app; 
+    </script>
 </head>
 <body>
   <div id="loading-screen">
