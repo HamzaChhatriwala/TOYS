@@ -388,7 +388,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
       </div>
       <div class="header-actions">
         <div class="action-icon" title="Account" onclick="routeTo('/login')" style="cursor:pointer;">👤</div>
-        <div class="action-icon" title="Wishlist">❤️<span class="badge" id="wish-badge">0</span></div>
+        <div class="action-icon" title="Wishlist" onclick="alert('❤️ You have ' + wishlist.length + ' item(s) in your wishlist! Wishlist viewing page is coming soon.')" style="cursor:pointer;">❤️<span class="badge" id="wish-badge">0</span></div>
         <div class="action-icon" onclick="toggleCart()" id="cart-icon" title="Cart">🛒<span class="badge" id="cart-badge">0</span></div>
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
       </div>
@@ -964,7 +964,7 @@ footer { background: var(--navy); color: white; padding: 60px 5% 20px; position:
             <div style="flex:1;border-top:2px solid #f0f0f0;"></div>
           </div>
           <!-- Create Account -->
-          <button onclick="routeTo('/contact')" class="btn" style="width:100%;background:var(--yellow);color:var(--red);border-radius:9999px;font-size:1.15rem;box-shadow:0 6px 0 #d4a00a;padding:16px;">
+          <button onclick="alert('Account Registration is temporarily unavailable while we upgrade our systems. Please continue as a Guest!');" class="btn" style="width:100%;background:var(--yellow);color:var(--red);border-radius:9999px;font-size:1.15rem;box-shadow:0 6px 0 #d4a00a;padding:16px;">
             Create Account
           </button>
           <p style="text-align:center;margin-top:20px;font-size:0.85rem;font-weight:700;color:rgba(26,35,126,0.35);">
